@@ -1,5 +1,5 @@
-const ADMIN_BIN_ID = "YOUR_ADMIN_BIN_ID";
-const API_KEY = "YOUR_API_KEY";
+const ADMIN_BIN_ID = "691232e7ae596e708f50f54d";
+const API_KEY = "$2a$10$SjcbvSnjiyFfuDwOzew2b.CtowaaptWCm38KZikWrQJRgyCp3owqS";
 let adminPassword = "";
 
 // Load current password from JSONBin
