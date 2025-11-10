@@ -1,0 +1,26 @@
+{
+  "name": "Lymo",
+  "short_name": "Lymo",
+  "description": "A lime-green Spew13-style mini Reddit",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07160a",
+  "theme_color": "#b7ff4c",
+  "icons": [
+    {
+      "src": "favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
