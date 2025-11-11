@@ -215,13 +215,35 @@ const STORAGE_KEYS = {
 
 function uid(){ return 'p_' + Math.random().toString(36).slice(2,10) }
 
-function loadPosts(){
+const ADMIN_POST_BIN_ID = "6913350cae596e708f5286c8"; // from first code
+const API_KEY = "$2a$10$SjcbvSnjiyFfuDwOzew2b.CtowaaptWCm38KZikWrQJRgyCp3owqS";
+
+async function loadPosts(){
   try{
-    return JSON.parse(localStorage.getItem(STORAGE_KEYS.POSTS) || '[]')
-  }catch(e){ return [] }
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}/latest`, {
+      headers: { "X-Master-Key": API_KEY }
+    });
+    const data = await res.json();
+    posts = data?.record?.posts || [];
+    renderPosts(document.getElementById('searchInput').value);
+    renderLikedList();
+  }catch(e){
+    console.error("Failed to load posts", e);
+    alert("Failed to load posts");
+  }
 }
-function savePosts(posts){
-  localStorage.setItem(STORAGE_KEYS.POSTS, JSON.stringify(posts))
+
+async function savePosts(){
+  try{
+    await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
+      body: JSON.stringify({ posts })
+    });
+  }catch(e){
+    console.error("Failed to save posts", e);
+    alert("Failed to save posts");
+  }
 }
 function loadAdmin(){
   const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.ADMIN) || '{}')
@@ -449,7 +471,9 @@ submitBtn.addEventListener('click', ()=>{
   if(!t && !b){ alert('Write a title or body') ; return }
   const newPost = { id: uid(), title: t || '(no title)', body: b, score: 0, created: Date.now(), img: img }
   posts.unshift(newPost)
-  savePosts(posts)
+await savePosts()
+renderPosts(document.getElementById('searchInput').value)
+renderLikedList()
   postTitle.value = ''
   postBody.value = ''
   postImage.value = ''
@@ -496,7 +520,7 @@ document.getElementById('newPostBtn').addEventListener('click', ()=> {
 /* ---------------------------
    Load / Save liked on startup
    --------------------------- */
-renderPosts()
+loadPosts()  // async fetch from JSONBin instead of localStorage
 renderLikedList()
 
 /* ---------------------------
