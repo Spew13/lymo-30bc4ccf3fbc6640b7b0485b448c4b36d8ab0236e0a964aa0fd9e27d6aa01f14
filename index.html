@@ -432,13 +432,14 @@ function requireAdminPrompt(){
     adminLogged = true
     adminName = 'Admin'
     updateAdminUI()
+    composerEl.classList.remove('disabled')  // unlock composer
+    postTitle.focus()                         // focus for immediate posting
     return true
   } else {
     alert('Wrong password')
     return false
   }
 }
-
 function updateAdminUI(){
   if(adminLogged){
     composerEl.classList.remove('disabled')
@@ -460,8 +461,14 @@ adminToggle.addEventListener('click', ()=>{
     }
     return
   }
-  requireAdminPrompt()
+  
+  if(requireAdminPrompt()){   // only if login successful
+    updateAdminUI()           // ensure UI updates
+    composerEl.classList.remove('disabled')  // unlock composer
+    postTitle.focus()          // focus input immediately
+  }
 })
+
 
 submitBtn.addEventListener('click', ()=>{
   if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
