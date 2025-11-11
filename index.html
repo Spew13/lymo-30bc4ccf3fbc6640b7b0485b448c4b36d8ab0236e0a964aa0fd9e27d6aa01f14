@@ -452,22 +452,21 @@ function updateAdminUI(){
   }
 }
 
+// Corrected code for the adminToggle click handler:
 adminToggle.addEventListener('click', ()=>{
-  if(adminLogged){
-    if(confirm('Logout admin?')){
+  if (adminLogged) {
+    if (confirm('Logout admin?')) {
       adminLogged = false
       updateAdminUI()
     }
-    return
-  }
-  
-  if(requireAdminPrompt()){   // only if login successful
-    updateAdminUI()           // ensure UI updates
-    composerEl.classList.remove('disabled')  // unlock composer
-    postTitle.focus()          // focus input immediately
+  } else { // Handle the login case when NOT adminLogged
+    if (requireAdminPrompt()) { // only if login successful
+      updateAdminUI()
+      composerEl.classList.remove('disabled') // unlock composer
+      postTitle.focus() // focus input immediately
+    }
   }
 })
-
 
 submitBtn.addEventListener('click', ()=>{
   if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
