@@ -452,21 +452,43 @@ function updateAdminUI(){
   }
 }
 
-// Corrected code for the adminToggle click handler:
+/* ---------------------------
+   Composer / Admin FIX
+   --------------------------- */
+
+function requireAdminPrompt(){
+    // Use the hardcoded default password
+    const ACTUAL_PASSWORD = loadAdmin() // This loads 'lymoadmin' or the password saved in local storage
+
+    const pass = prompt('Enter admin password:')
+    if(pass === null) return false // User canceled
+
+    if(pass === ACTUAL_PASSWORD){
+        alert("Logged in as admin!")
+        adminLogged = true
+        adminName = 'Admin'
+        updateAdminUI()
+        composerEl.classList.remove('disabled')
+        postTitle.focus()
+        return true
+    } else {
+        alert('Wrong password')
+        return false
+    }
+}
+
 adminToggle.addEventListener('click', ()=>{
-  if (adminLogged) {
-    if (confirm('Logout admin?')) {
-      adminLogged = false
-      updateAdminUI()
+    if(adminLogged){
+        // If logged in, prompt to log out
+        if(confirm('Logout admin?')){
+            adminLogged = false
+            updateAdminUI()
+        }
+    } else {
+        // If logged out, prompt to log in
+        requireAdminPrompt()
     }
-  } else { // Handle the login case when NOT adminLogged
-    if (requireAdminPrompt()) { // only if login successful
-      updateAdminUI()
-      composerEl.classList.remove('disabled') // unlock composer
-      postTitle.focus() // focus input immediately
-    }
-  }
-})
+});
 
 submitBtn.addEventListener('click', ()=>{
   if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
