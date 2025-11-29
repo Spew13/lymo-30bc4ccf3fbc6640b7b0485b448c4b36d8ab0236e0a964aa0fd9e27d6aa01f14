@@ -246,7 +246,7 @@ async function savePosts(){
 }
 function loadAdmin(){
   const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.ADMIN) || '{}')
-  return data.password || 'lymoadmin'
+  return data.password // Now returns the saved password or undefined
 }
 function saveAdmin(pass){
   localStorage.setItem(STORAGE_KEYS.ADMIN, JSON.stringify({password:pass}))
@@ -263,7 +263,7 @@ function saveLikedSet(set){
 /* ---------------------------
    App state
    --------------------------- */
-let posts = loadPosts()
+let posts = []; // Must be initialized as an empty array
 let liked = loadLikedSet()
 let adminLogged = false
 let adminName = 'Admin'
@@ -423,21 +423,38 @@ const changePassBtn = document.getElementById('changePassBtn')
 const logoutBtn = document.getElementById('logoutBtn')
 const adminNameEl = document.getElementById('adminName')
 
+/* --------------------------- Composer / Admin FIX --------------------------- */
 function requireAdminPrompt(){
-  const pass = prompt('Enter admin password:')
-  if(pass === null) return false
-  const actual = loadAdmin()
-  if(pass === actual){
-    adminLogged = true
-    adminName = 'Admin'
-    updateAdminUI()
-    composerEl.classList.remove('disabled')  // unlock composer
-    postTitle.focus()                         // focus for immediate posting
-    return true
-  } else {
-    alert('Wrong password')
-    return false
-  }
+    const ACTUAL_PASSWORD = loadAdmin()
+    
+    // --- NEW LOGIC: Check if a password exists ---
+    if (!ACTUAL_PASSWORD) {
+        alert("No admin password found. You must set one first.");
+        // Prompt user to set a password immediately
+        const newPass = prompt("Please set a new Admin password:");
+        if (newPass) {
+            saveAdmin(newPass);
+            alert("Admin password set! Please try logging in now.");
+        }
+        return false; // Stop the current login attempt
+    }
+    // --- END NEW LOGIC ---
+
+    const pass = prompt('Enter admin password:');
+    if(pass === null) return false;
+
+    if(pass === ACTUAL_PASSWORD){
+        alert("Logged in as admin!");
+        adminLogged = true;
+        adminName = 'Admin';
+        updateAdminUI();
+        composerEl.classList.remove('disabled');
+        postTitle.focus();
+        return true;
+    } else {
+        alert('Wrong password');
+        return false;
+    }
 }
 function updateAdminUI(){
   if(adminLogged){
@@ -489,8 +506,7 @@ adminToggle.addEventListener('click', ()=>{
         requireAdminPrompt()
     }
 });
-
-submitBtn.addEventListener('click', ()=>{
+submitBtn.addEventListener('click', async ()=>{ // <-- FIX: ADD 'async' HERE
   if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
   const t = postTitle.value.trim()
   const b = postBody.value.trim()
@@ -498,16 +514,15 @@ submitBtn.addEventListener('click', ()=>{
   if(!t && !b){ alert('Write a title or body') ; return }
   const newPost = { id: uid(), title: t || '(no title)', body: b, score: 0, created: Date.now(), img: img }
   posts.unshift(newPost)
-await savePosts()
-renderPosts(document.getElementById('searchInput').value)
-renderLikedList()
+  
+  await savePosts() // This will now wait for the API save to finish
+  
   postTitle.value = ''
   postBody.value = ''
   postImage.value = ''
   renderPosts(document.getElementById('searchInput').value)
   renderLikedList()
 })
-
 changePassBtn.addEventListener('click', ()=>{
   if(!adminLogged){
     alert('Login as admin first')
