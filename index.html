@@ -207,8 +207,6 @@
    Data layer (localStorage)
    --------------------------- */
 const STORAGE_KEYS = {
-  POSTS: 'lymo_posts_v1',
-  ADMIN: 'lymo_admin_v1',
   LIKED: 'lymo_liked_v1'
 };
 
@@ -223,7 +221,11 @@ async function loadPosts(){
       headers: { "X-Master-Key": API_KEY }
     });
     const data = await res.json();
+    
+    // FIX: Extract both posts and adminPassword
     posts = data?.record?.posts || [];
+    adminPassword = data?.record?.adminPassword || ''; // <-- SET GLOBAL STATE
+    
     renderPosts(document.getElementById('searchInput').value);
     renderLikedList();
   }catch(e){
@@ -234,23 +236,23 @@ async function loadPosts(){
 
 async function savePosts(){
   try{
+    // FIX: Include the adminPassword in the data we save
+    const dataToSave = { 
+        posts: posts, 
+        adminPassword: adminPassword // <-- ADD THIS
+    };
+    
     await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
-      body: JSON.stringify({ posts })
+      body: JSON.stringify(dataToSave) // <-- Use the combined object
     });
   }catch(e){
-    console.error("Failed to save posts", e);
-    alert("Failed to save posts");
+    console.error("Failed to save data", e);
+    alert("Failed to save data (posts and password)");
   }
 }
-function loadAdmin(){
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.ADMIN) || '{}')
-  return data.password // Now returns the saved password or undefined
-}
-function saveAdmin(pass){
-  localStorage.setItem(STORAGE_KEYS.ADMIN, JSON.stringify({password:pass}))
-}
+  
 function loadLikedSet(){
   try{
     return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED) || '[]'))
@@ -264,19 +266,10 @@ function saveLikedSet(set){
    App state
    --------------------------- */
 let posts = []; // Must be initialized as an empty array
+let adminPassword = ''; // <-- NEW: Holds the current password
 let liked = loadLikedSet()
 let adminLogged = false
 let adminName = 'Admin'
-
-/* If no posts exist, create a few sample posts */
-if(posts.length === 0){
-  posts = [
-    { id: uid(), title: 'Welcome to Lymo — spew13', body: 'This is the community feed. Only admins can post here. Use the heart to save posts to your Liked list.', score: 10, created: Date.now(), img: '' },
-    { id: uid(), title: 'Share your projects!', body: 'Drop links or screenshots. We host images via GitHub. Admins curate the front page.', score: 5, created: Date.now()-1000*60*60, img: '' }
-  ]
-  savePosts(posts)
-}
-
 /* ---------------------------
    Rendering
    --------------------------- */
@@ -324,9 +317,9 @@ function renderPosts(filterText=''){
     const up = node.querySelector('[data-action="up"]')
     const down = node.querySelector('[data-action="down"]')
     const scoreEl = node.querySelector('.score')
-    up.addEventListener('click', ()=>{ p.score += 1; scoreEl.textContent = p.score; savePosts(posts); updateKarma(); renderLikedList() })
-    down.addEventListener('click', ()=>{ p.score -= 1; scoreEl.textContent = p.score; savePosts(posts); updateKarma(); renderLikedList() })
-
+    // Corrected Vote Handlers:
+up.addEventListener('click', ()=>{ p.score += 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
+down.addEventListener('click', ()=>{ p.score -= 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
     // like handler
     const likeBtn = node.querySelector('[data-like]')
     likeBtn.addEventListener('click', (e)=>{
@@ -424,38 +417,7 @@ const logoutBtn = document.getElementById('logoutBtn')
 const adminNameEl = document.getElementById('adminName')
 
 /* --------------------------- Composer / Admin FIX --------------------------- */
-function requireAdminPrompt(){
-    const ACTUAL_PASSWORD = loadAdmin()
-    
-    // --- NEW LOGIC: Check if a password exists ---
-    if (!ACTUAL_PASSWORD) {
-        alert("No admin password found. You must set one first.");
-        // Prompt user to set a password immediately
-        const newPass = prompt("Please set a new Admin password:");
-        if (newPass) {
-            saveAdmin(newPass);
-            alert("Admin password set! Please try logging in now.");
-        }
-        return false; // Stop the current login attempt
-    }
-    // --- END NEW LOGIC ---
 
-    const pass = prompt('Enter admin password:');
-    if(pass === null) return false;
-
-    if(pass === ACTUAL_PASSWORD){
-        alert("Logged in as admin!");
-        adminLogged = true;
-        adminName = 'Admin';
-        updateAdminUI();
-        composerEl.classList.remove('disabled');
-        postTitle.focus();
-        return true;
-    } else {
-        alert('Wrong password');
-        return false;
-    }
-}
 function updateAdminUI(){
   if(adminLogged){
     composerEl.classList.remove('disabled')
@@ -472,16 +434,26 @@ function updateAdminUI(){
 /* ---------------------------
    Composer / Admin FIX
    --------------------------- */
-
 function requireAdminPrompt(){
-    // Use the hardcoded default password
-    const ACTUAL_PASSWORD = loadAdmin() // This loads 'lymoadmin' or the password saved in local storage
+    
+    // 1. Check if a password exists (if not, prompt to set one)
+    if (!adminPassword) {
+        alert("No Admin password found on JSONBin. You must set one first.");
+        const newPass = prompt("Please set the new Admin password:");
+        if (newPass) {
+            adminPassword = newPass; // Set global state
+            savePosts(); // Save the new password to JSONBin
+            alert("Admin password set and saved to JSONBin! Please log in now.");
+        }
+        return false;
+    }
 
-    const pass = prompt('Enter admin password:')
-    if(pass === null) return false // User canceled
+    // 2. Regular Login Check
+    const pass = prompt('Enter admin password:');
+    if(pass === null) return false;
 
-    if(pass === ACTUAL_PASSWORD){
-        alert("Logged in as admin!")
+    if(pass === adminPassword){ // <-- Check against the global state pulled from JSONBin
+        alert("Logged in as admin!");
         adminLogged = true
         adminName = 'Admin'
         updateAdminUI()
@@ -493,7 +465,7 @@ function requireAdminPrompt(){
         return false
     }
 }
-
+  // KEEP THIS BLOCK:
 adminToggle.addEventListener('click', ()=>{
     if(adminLogged){
         // If logged in, prompt to log out
@@ -503,10 +475,11 @@ adminToggle.addEventListener('click', ()=>{
         }
     } else {
         // If logged out, prompt to log in
-        requireAdminPrompt()
+        requireAdminPrompt() // This now correctly calls the NEW, JSONBin-compatible version
     }
 });
-submitBtn.addEventListener('click', async ()=>{ // <-- FIX: ADD 'async' HERE
+  
+submitBtn.addEventListener('click', async ()=>{ // <-- The FIX: 'async' is mandatory here
   if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
   const t = postTitle.value.trim()
   const b = postBody.value.trim()
@@ -515,7 +488,7 @@ submitBtn.addEventListener('click', async ()=>{ // <-- FIX: ADD 'async' HERE
   const newPost = { id: uid(), title: t || '(no title)', body: b, score: 0, created: Date.now(), img: img }
   posts.unshift(newPost)
   
-  await savePosts() // This will now wait for the API save to finish
+  await savePosts() // This line now runs without error
   
   postTitle.value = ''
   postBody.value = ''
@@ -528,13 +501,19 @@ changePassBtn.addEventListener('click', ()=>{
     alert('Login as admin first')
     return
   }
-  const cur = prompt('Enter current password:')
-  if(cur === null) return
-  if(cur !== loadAdmin()){ alert('Wrong current password'); return }
+  
   const next = prompt('Enter new admin password:')
-  if(next === null || next.trim() === '') return
-  saveAdmin(next)
-  alert('Admin password changed')
+  
+  if(next === null || next.trim() === ''){
+    alert('Password change cancelled or new password was empty.')
+    return
+  }
+  
+  // Update global state and save everything to JSONBin
+  adminPassword = next.trim();
+  savePosts(); // Saves the new password to the remote bin
+  
+  alert('Admin password successfully changed and saved to JSONBin.')
 })
 
 logoutBtn.addEventListener('click', ()=>{
@@ -564,26 +543,6 @@ document.getElementById('newPostBtn').addEventListener('click', ()=> {
    --------------------------- */
 loadPosts()  // async fetch from JSONBin instead of localStorage
 renderLikedList()
-
-/* ---------------------------
-   Helpers: escape from XSS risk (simple)
-   --------------------------- */
-(function attachGlobalEvents(){
-  // Re-render after posts saved in other tab
-  window.addEventListener('storage', (e)=>{
-    if(e.key === STORAGE_KEYS.POSTS){
-      posts = loadPosts()
-      renderPosts(document.getElementById('searchInput').value)
-      renderLikedList()
-    }
-    if(e.key === STORAGE_KEYS.LIKED){
-      liked = loadLikedSet()
-      renderLikedList()
-      renderPosts(document.getElementById('searchInput').value)
-    }
-  })
-})();
-
 </script>
 </body>
 </html>
