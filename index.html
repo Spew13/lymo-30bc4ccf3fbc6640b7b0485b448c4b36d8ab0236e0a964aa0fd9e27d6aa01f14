@@ -7,100 +7,44 @@
 <link rel="manifest" href="assets/manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-<link rel="shortcut icon" href="assets/favicon.ico">
+<script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-/* -------------------- General Styles -------------------- */
-:root{
-  --bg:#071017; --card:#081018; --lime-1:#c7ff5a; --lime-2:#8ef23b;
-  --muted:#9fb1b1; --glass: rgba(255,255,255,0.03); --radius:14px;
-  --shadow: 0 12px 40px rgba(2,8,10,0.6);
-  --accent: linear-gradient(90deg,var(--lime-1),var(--lime-2));
-  --ease:cubic-bezier(.16,.84,.32,1);
-  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color-scheme: dark;
-}
-
-/* body */
-body{
-  margin:0; padding:28px;
-  background:
-    radial-gradient(500px 300px at 8% 10%, rgba(140,255,120,0.06), transparent 10%),
-    radial-gradient(700px 420px at 92% 90%, rgba(140,255,120,0.03), transparent 6%),
-    linear-gradient(180deg,#04060a 0%, #071017 100%);
-  color:#e6f5e9;
-  -webkit-font-smoothing:antialiased;
-  min-height:100vh;
-}
-
-/* header */
-header{
-  display:flex; align-items:center; gap:16px;
-  position:sticky; top:18px; z-index:40;
-  backdrop-filter: blur(6px);
-  padding:10px 12px; border-radius:12px;
-  border:1px solid rgba(255,255,255,0.03);
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  box-shadow: 0 8px 40px rgba(2,8,10,0.55);
-}
-
-.logo{display:flex;align-items:center;gap:10px;background:var(--accent);color:#041b07;padding:10px 14px;border-radius:12px;font-weight:800;letter-spacing:0.6px}
-.logo .dot{width:12px;height:12px;border-radius:3px;background:#063;box-shadow:0 0 18px rgba(183,255,76,0.6) inset}
-
-.search{margin-left:auto;display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:var(--lime-1)}
-.search input{background:transparent;border:0;outline:none;color:inherit;width:180px;font-weight:600}
-
-/* main layout */
-main{display:grid; grid-template-columns: 1fr 320px; gap:22px; margin-top:18px; align-items:start}
-
-/* feed */
-.feed{max-width:940px;}
-.controls{display:flex; gap:10px; align-items:center; margin-bottom:14px}
-.btn{background:transparent;border:1px solid rgba(255,255,255,0.04); padding:9px 12px;border-radius:10px;color:var(--lime-1); cursor:pointer; font-weight:700; transition:transform .12s var(--ease), box-shadow .12s var(--ease)}
-.btn:hover{transform:translateY(-3px); box-shadow:var(--shadow)}
-.btn.primary{background:var(--accent); color:#05220b; border:none; box-shadow: 0 10px 30px rgba(142,242,59,0.08)}
-
-.composer{
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius:12px; padding:14px; margin-bottom:14px; border:1px solid rgba(255,255,255,0.03);
-  display:flex; gap:12px; align-items:flex-start; box-shadow: 0 6px 20px rgba(2,8,10,0.45);
-  transition: transform .18s var(--ease), box-shadow .18s var(--ease);
-}
-.composer.disabled{opacity:0.55; pointer-events:none}
-
-/* posts */
-.post{background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); border-radius:14px; padding:12px; display:flex; gap:12px; border:1px solid rgba(255,255,255,0.03); margin-bottom:12px; align-items:flex-start; box-shadow: 0 10px 30px rgba(2,8,10,0.35); transform-origin:top center; animation:cardIn .32s var(--ease) both}
-@keyframes cardIn{from{opacity:0; transform:translateY(8px) scale(.995)} to{opacity:1; transform:translateY(0) scale(1)}}
-
-/* votes/likes */
-.votes{width:62px; display:flex; flex-direction:column; align-items:center; gap:8px; padding-top:6px}
-.vote-btn{background:transparent;border:0; color:var(--muted); font-weight:800; cursor:pointer; font-size:20px; transition:transform .12s var(--ease)}
-.vote-btn:hover{transform:translateY(-3px)}
-.score{font-weight:800; font-size:16px; color:var(--lime-1)}
-
-.like-btn{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; cursor:pointer; border:1px solid rgba(255,255,255,0.03); background:transparent; transition:all .12s var(--ease)}
-.like-btn .heart{font-size:18px; transition:transform .12s var(--ease), color .12s}
-.like-btn.liked{background:linear-gradient(90deg,var(--lime-1),var(--lime-2)); color:#04220a; box-shadow:0 8px 30px rgba(142,242,59,0.08); transform:translateY(-2px)}
-.like-btn.liked .heart{transform:scale(1.14)}
-
-/* sidebar */
-aside{position:sticky; top:86px; height:calc(100vh - 140px); overflow:auto; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); box-shadow: 0 8px 40px rgba(2,8,10,0.45)}
-.widget{padding:12px; border-radius:12px; margin-bottom:12px; background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
-.widget h4{margin:0 0 8px 0; font-size:14px; color:var(--lime-1)}
-.liked-list{display:flex; flex-direction:column; gap:8px}
-.liked-item{display:flex; gap:8px; align-items:flex-start; padding:8px; border-radius:10px; background:rgba(0,0,0,0.04); cursor:pointer; transition:transform .12s var(--ease)}
-.liked-item:hover{transform:translateY(-4px)}
-.liked-item .title{font-weight:700; font-size:13px}
-.muted{color:var(--muted); font-size:13px}
-
-@media (max-width:920px){ main{grid-template-columns:1fr} aside{position:relative; top:auto; height:auto}}
+  /* --- Minimal styling for Lymo --- */
+  :root{
+    --bg:#071017; --card:#081018;
+    --lime-1:#c7ff5a; --lime-2:#8ef23b;
+    --muted:#9fb1b1;
+    --radius:14px; --shadow: 0 12px 40px rgba(2,8,10,0.6);
+    --accent: linear-gradient(90deg,var(--lime-1),var(--lime-2));
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto;
+    color-scheme: dark;
+  }
+  body{margin:0;padding:28px; background:#071017; color:#e6f5e9; min-height:100vh;}
+  header{display:flex;align-items:center;gap:16px;position:sticky;top:0;padding:10px 12px;background:rgba(255,255,255,0.02);border-radius:12px;}
+  .logo{font-weight:800; background:var(--accent); color:#041b07; padding:10px 14px; border-radius:12px;}
+  .search{margin-left:auto; display:flex;align-items:center;gap:8px; background:rgba(255,255,255,0.02);border-radius:999px; padding:8px;}
+  .search input{background:transparent;border:0;outline:none;color:inherit;width:180px;font-weight:600;}
+  main{display:grid;grid-template-columns:1fr 320px;gap:22px;margin-top:18px;}
+  .feed{max-width:940px;}
+  .btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:var(--lime-1);cursor:pointer;font-weight:700;}
+  .btn.primary{background:var(--accent);color:#05220b;border:none;}
+  .composer{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;gap:12px;}
+  textarea{flex:1;min-height:68px;resize:vertical;background:transparent;border:1px dashed rgba(255,255,255,0.03);padding:10px;border-radius:10px;color:inherit;}
+  .post{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));padding:12px;border-radius:14px;display:flex;gap:12px;border:1px solid rgba(255,255,255,0.03);margin-bottom:12px;align-items:flex-start;}
+  .votes{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .score{font-weight:800;color:var(--lime-1);}
+  aside{position:sticky;top:86px;height:calc(100vh - 140px);overflow:auto;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));}
 </style>
 </head>
 <body>
+
 <header>
-  <div class="logo"><div class="dot"></div>Lymo</div>
-  <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="searchInput" placeholder="Search posts..."></div>
+  <div class="logo">Lymo</div>
+  <div class="search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input id="searchInput" placeholder="Search posts...">
+  </div>
 </header>
 
 <main>
@@ -108,258 +52,167 @@ aside{position:sticky; top:86px; height:calc(100vh - 140px); overflow:auto; padd
     <div class="controls">
       <button id="adminToggle" class="btn">Admin</button>
       <button id="newPostBtn" class="btn primary">New Post</button>
-      <div class="sort" style="margin-left:auto; display:flex; gap:8px; align-items:center">
-        <div class="pill small">Sort</div>
-        <select id="sortSelect" class="btn" style="padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);">
-          <option value="hot">Hot</option>
-          <option value="new">New</option>
-          <option value="top">Top</option>
-        </select>
+      <select id="sortSelect" class="btn" style="margin-left:auto;">
+        <option value="hot">Hot</option>
+        <option value="new">New</option>
+        <option value="top">Top</option>
+      </select>
+    </div>
+
+    <div id="composer" class="composer disabled">
+      <textarea id="postBody" placeholder="Write something (admin only)..."></textarea>
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <input id="postTitle" placeholder="Title" style="padding:6px;border-radius:8px;">
+        <input id="postImage" placeholder="Image URL (optional)" style="padding:6px;border-radius:8px;">
+        <button id="submitPost" class="btn primary">Post</button>
       </div>
     </div>
 
-    <!-- Composer -->
-    <div id="composer" class="composer disabled" title="Only admins can post">
-      <div class="avatar" style="font-size:13px">ADM</div>
-      <div style="flex:1">
-        <div style="display:flex; gap:8px; align-items:center;">
-          <input id="postTitle" placeholder="Post title..." style="flex:1; padding:8px;border-radius:10px;background:transparent;border:1px dashed rgba(255,255,255,0.03);outline:none;color:inherit;font-weight:700">
-          <input id="postImage" placeholder="Image URL (optional)" style="width:220px;padding:8px;border-radius:10px;background:transparent;border:1px dashed rgba(255,255,255,0.03);outline:none;color:inherit">
-        </div>
-        <textarea id="postBody" placeholder="Write something (admin only)..." style="margin-top:8px"></textarea>
-        <div style="display:flex; gap:8px; margin-top:10px; align-items:center">
-          <button id="submitPost" class="btn primary">Post</button>
-          <div class="small muted">Logged in as <strong id="adminName">Admin</strong></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Posts list -->
     <div id="posts"></div>
   </section>
 
-  <!-- Sidebar -->
   <aside>
-    <div class="widget">
-      <h4>Profile</h4>
-      <div style="display:flex; gap:12px; align-items:center">
-        <div class="avatar" style="width:56px;height:56px;border-radius:12px;font-size:18px">LY</div>
-        <div>
-          <div style="font-weight:800">Lymo User</div>
-          <div class="muted tiny">Spew13 community</div>
-        </div>
-      </div>
-      <div style="display:flex; gap:8px; margin-top:10px">
-        <div class="pill">Karma: <strong id="karmaCount">0</strong></div>
-        <div class="pill">Posts: <strong id="postCount">0</strong></div>
-      </div>
-    </div>
-
-    <div class="widget">
-      <h4>Liked Posts <span id="likedCount" style="float:right" class="muted tiny">0</span></h4>
-      <div id="likedList" class="liked-list">
-        <div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>
-      </div>
-    </div>
-
-    <div class="widget">
-      <h4>Admin Controls</h4>
-      <div style="display:flex; gap:8px; flex-direction:column">
-        <button id="changePassBtn" class="btn">Change Admin Password</button>
-        <button id="logoutBtn" class="btn">Logout Admin</button>
-      </div>
-    </div>
+    <h4>Liked Posts <span id="likedCount">0</span></h4>
+    <div id="likedList"></div>
+    <h4>Admin Controls</h4>
+    <button id="changePassBtn" class="btn">Change Admin Password</button>
+    <button id="logoutBtn" class="btn">Logout Admin</button>
   </aside>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
 <script>
-// ------------------ Appwrite ------------------
+/* ----------------- Appwrite Secrets ----------------- */
 const client = new Appwrite.Client()
-  .setEndpoint("https://nyc.cloud.appwrite.io/v1")
-  .setProject("6930516e001b85af6b1e");
+    .setEndpoint("https://nyc.cloud.appwrite.io/v1")
+    .setProject("6930516e001b85af6b1e");
 
 const account = new Appwrite.Account(client);
 const storage = new Appwrite.Storage(client);
 
-// ------------------ Global State ------------------
+async function loadSecrets() {
+    await account.createAnonymousSession();
+    const fileBlob = await storage.getFileView("69305285002f8b73e74a","69305332002860f9ba24");
+    const secrets = JSON.parse(await fileBlob.text());
+    window.API_KEY = secrets.apikey;
+    window.ADMIN_POST_BIN_ID = secrets.binid;
+    startLymo();
+}
+
+/* ----------------- App State ----------------- */
 let posts = [];
 let adminPassword = '';
-let liked = new Set();
+let liked = new Set(JSON.parse(localStorage.getItem('lymo_liked_v1')||'[]'));
 let adminLogged = false;
-let adminName = 'Admin';
-let API_KEY = '';
-let ADMIN_POST_BIN_ID = '';
 
-// ------------------ LocalStorage ------------------
-const STORAGE_KEYS = { LIKED: 'lymo_liked_v1' };
-function loadLikedSet(){ try{return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED)||'[]'))}catch(e){return new Set()} }
-function saveLikedSet(set){ localStorage.setItem(STORAGE_KEYS.LIKED, JSON.stringify(Array.from(set))) }
-liked = loadLikedSet();
+/* ----------------- Utility ----------------- */
+function uid(){return 'p_'+Math.random().toString(36).slice(2,10);}
+function saveLiked(){localStorage.setItem('lymo_liked_v1', JSON.stringify(Array.from(liked)));}
 
-// ------------------ Appwrite Secrets ------------------
-async function loadSecrets(){
-  await account.createAnonymousSession();
-  const blob = await storage.getFileView("69305285002f8b73e74a","69305332002860f9ba24");
-  const text = await blob.text();
-  const secrets = JSON.parse(text);
-  API_KEY = secrets.apikey;
-  ADMIN_POST_BIN_ID = secrets.binid;
-  startLymo();
-}
-
-// ------------------ Start Lymo ------------------
-async function startLymo(){
-  await loadPosts();
-  renderLikedList();
-}
-
-// ------------------ Fetch/Save Posts ------------------
+/* ----------------- JSONBin ----------------- */
 async function loadPosts(){
-  try{
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}/latest`, { headers: {"X-Master-Key": API_KEY}});
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}/latest`, {
+        headers: {"X-Master-Key": API_KEY}
+    });
     const data = await res.json();
     posts = data?.record?.posts || [];
     adminPassword = data?.record?.adminPassword || '';
-    renderPosts(document.getElementById('searchInput').value);
-  }catch(e){ console.error(e); alert("Failed to load posts") }
+    renderPosts();
+    renderLiked();
 }
 
 async function savePosts(){
-  try{
-    const dataToSave = { posts, adminPassword };
     await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
-      body: JSON.stringify(dataToSave)
+        method: "PUT",
+        headers: {"Content-Type":"application/json","X-Master-Key":API_KEY},
+        body: JSON.stringify({posts, adminPassword})
     });
-  }catch(e){ console.error(e); alert("Failed to save posts") }
 }
 
-// ------------------ Render ------------------
+/* ----------------- Render ----------------- */
 const postsEl = document.getElementById('posts');
 const likedListEl = document.getElementById('likedList');
 const likedCountEl = document.getElementById('likedCount');
-const postCountEl = document.getElementById('postCount');
-const karmaEl = document.getElementById('karmaCount');
 
-function escapeHtml(s=''){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
-function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60)return s+'s ago'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
 function renderPosts(filter=''){
-  postsEl.innerHTML='';
-  let list = [...posts];
-  const sort = document.getElementById('sortSelect').value;
-  if(sort==='new') list.sort((a,b)=>b.created-a.created);
-  else if(sort==='top') list.sort((a,b)=>b.score-b.score);
-  else list.sort((a,b)=> (b.score+(Date.now()-b.created)/10000000)-(a.score+(Date.now()-a.created)/10000000));
-  if(filter) list=list.filter(p=>(p.title+' '+p.body).toLowerCase().includes(filter.toLowerCase()));
+    postsEl.innerHTML = '';
+    const sort = document.getElementById('sortSelect').value;
+    let list = [...posts];
+    if(sort==='new') list.sort((a,b)=>b.created-a.created);
+    else if(sort==='top') list.sort((a,b)=>b.score-a.score);
+    else list.sort((a,b)=> (b.score + (Date.now()-b.created)/10000000) - (a.score + (Date.now()-a.created)/10000000));
+    if(filter) list = list.filter(p => (p.title+' '+p.body).toLowerCase().includes(filter.toLowerCase()));
 
-  list.forEach(p=>{
-    const node=document.createElement('div'); node.className='post'; node.id='post_'+p.id;
-    node.innerHTML=`
-      <div class="votes">
-        <button class="vote-btn" data-action="up">▲</button>
-        <div class="score">${p.score}</div>
-        <button class="vote-btn" data-action="down">▼</button>
-      </div>
-      <div class="body">
-        <div class="title">${escapeHtml(p.title)}</div>
-        ${p.img?`<div style="margin:8px 0"><img src="${escapeHtml(p.img)}" style="max-width:100%;border-radius:10px;display:block"></div>`:''}
-        <div class="text">${escapeHtml(p.body)}</div>
-        <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
-          <button class="like-btn ${liked.has(p.id)?'liked':''}" data-like="${p.id}">
-            <span class="heart">${liked.has(p.id)?'♥':'♡'}</span>
-            <span class="muted tiny">${liked.has(p.id)?'Saved':'Save'}</span>
-          </button>
-          <div class="muted tiny">Posted <strong>${timeAgo(p.created)}</strong></div>
+    list.forEach(p=>{
+        const node = document.createElement('div');
+        node.className='post';
+        node.innerHTML = `<div class="votes">
+            <button class="up">▲</button>
+            <div class="score">${p.score}</div>
+            <button class="down">▼</button>
         </div>
-      </div>
-    `;
-    postsEl.appendChild(node);
-  });
-
-  postCountEl.innerText = posts.length;
-  karmaEl.innerText = posts.reduce((a,b)=>a+b.score,0);
+        <div>
+            <strong>${p.title}</strong><br>${p.body || ''}
+        </div>`;
+        const up=node.querySelector('.up');
+        const down=node.querySelector('.down');
+        const scoreEl=node.querySelector('.score');
+        up.onclick=()=>{p.score++; scoreEl.textContent=p.score; savePosts(); renderLiked();}
+        down.onclick=()=>{p.score--; scoreEl.textContent=p.score; savePosts(); renderLiked();}
+        postsEl.appendChild(node);
+    });
 }
 
-// ------------------ Liked Posts ------------------
-function renderLikedList(){
-  likedListEl.innerHTML='';
-  if(liked.size===0){ likedListEl.innerHTML='<div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>'; likedCountEl.innerText='0'; return; }
-  likedCountEl.innerText=liked.size;
-  liked.forEach(id=>{
-    const p=posts.find(x=>x.id===id); if(!p) return;
-    const node=document.createElement('div'); node.className='liked-item'; node.innerHTML=`<div class="title">${escapeHtml(p.title)}</div><div class="muted tiny">${timeAgo(p.created)}</div>`;
-    node.onclick=()=>{ document.getElementById('post_'+id)?.scrollIntoView({behavior:'smooth'}); };
-    likedListEl.appendChild(node);
-  });
+function renderLiked(){
+    likedListEl.innerHTML=''; likedCountEl.textContent=liked.size;
+    Array.from(liked).forEach(id=>{
+        const p=posts.find(x=>x.id===id);
+        if(!p) return;
+        const el=document.createElement('div');
+        el.textContent=p.title+' ('+p.score+')';
+        likedListEl.appendChild(el);
+    });
 }
 
-// ------------------ Events ------------------
-document.getElementById('searchInput').addEventListener('input', e=>renderPosts(e.target.value));
-document.getElementById('sortSelect').addEventListener('change', ()=>renderPosts(document.getElementById('searchInput').value));
+/* ----------------- Admin ----------------- */
+const composerEl=document.getElementById('composer');
+const submitBtn=document.getElementById('submitPost');
+const postTitle=document.getElementById('postTitle');
+const postBody=document.getElementById('postBody');
+const postImage=document.getElementById('postImage');
+const adminToggle=document.getElementById('adminToggle');
+const changePassBtn=document.getElementById('changePassBtn');
+const logoutBtn=document.getElementById('logoutBtn');
 
-// Likes
-postsEl.addEventListener('click', e=>{
-  const likeBtn = e.target.closest('[data-like]');
-  if(likeBtn){
-    const pid = likeBtn.getAttribute('data-like');
-    if(liked.has(pid)) liked.delete(pid); else liked.add(pid);
-    saveLikedSet(liked); renderPosts(document.getElementById('searchInput').value); renderLikedList();
-  }
-});
+function updateAdminUI(){composerEl.classList.toggle('disabled',!adminLogged);}
 
-// Voting
-postsEl.addEventListener('click', e=>{
-  const btn = e.target.closest('.vote-btn');
-  if(!btn) return;
-  const postEl = btn.closest('.post'); if(!postEl) return;
-  const pid = postEl.id.replace('post_','');
-  const post = posts.find(p=>p.id===pid); if(!post) return;
-  if(btn.dataset.action==='up') post.score++; else post.score--;
-  renderPosts(document.getElementById('searchInput').value);
-  savePosts();
-});
-
-// Admin toggle & composer
-document.getElementById('adminToggle').addEventListener('click', async ()=>{
-  if(adminLogged){ adminLogged=false; updateComposer(false); return; }
-  const pass=prompt('Enter admin password:'); if(pass===adminPassword){ adminLogged=true; updateComposer(true); alert('Admin logged in!'); } else{ alert('Wrong password') }
-});
-
-function updateComposer(enable){
-  const composer=document.getElementById('composer');
-  if(enable){ composer.classList.remove('disabled'); composer.title=''; } else{ composer.classList.add('disabled'); composer.title='Only admins can post' }
+function requireAdmin(){
+    if(!adminPassword){
+        const p=prompt('Set new admin password:'); if(!p) return false; adminPassword=p; savePosts(); alert('Password set'); return false;
+    }
+    const pass=prompt('Enter admin password:'); if(pass===adminPassword){adminLogged=true;updateAdminUI();alert('Logged in!'); return true;}
+    alert('Wrong password'); return false;
 }
 
-// New post
-document.getElementById('submitPost').addEventListener('click', async ()=>{
-  if(!adminLogged) return alert('Admin only');
-  const title=document.getElementById('postTitle').value.trim();
-  const body=document.getElementById('postBody').value.trim();
-  const img=document.getElementById('postImage').value.trim();
-  if(!title || !body) return alert('Title & body required');
-  const id=Date.now().toString();
-  posts.unshift({ id, title, body, img, score:0, created:Date.now() });
-  await savePosts();
-  renderPosts(document.getElementById('searchInput').value);
-  document.getElementById('postTitle').value='';
-  document.getElementById('postBody').value='';
-  document.getElementById('postImage').value='';
-});
+adminToggle.onclick=()=>{if(adminLogged){if(confirm('Logout?')){adminLogged=false;updateAdminUI();}}else{requireAdmin();}};
+submitBtn.onclick=async ()=>{
+    if(!adminLogged){alert('Only admins can post');return;}
+    const newPost={id:uid(),title:postTitle.value||'(no title)',body:postBody.value,score:0,created:Date.now(),img:postImage.value};
+    posts.unshift(newPost);
+    await savePosts();
+    postTitle.value=''; postBody.value=''; postImage.value='';
+    renderPosts();
+};
+changePassBtn.onclick=()=>{if(!adminLogged){alert('Login first');return;}const p=prompt('New password:');if(!p)return;adminPassword=p;savePosts();alert('Saved');};
+logoutBtn.onclick=()=>{adminLogged=false;updateAdminUI();};
 
-// Change password
-document.getElementById('changePassBtn').addEventListener('click', ()=>{
-  if(!adminLogged) return alert('Admin only');
-  const pass=prompt('Enter new admin password:'); if(!pass) return;
-  adminPassword=pass; savePosts(); alert('Password changed');
-});
+/* ----------------- Search / Sort ----------------- */
+document.getElementById('searchInput').addEventListener('input',e=>renderPosts(e.target.value));
+document.getElementById('sortSelect').addEventListener('change',()=>renderPosts(document.getElementById('searchInput').value));
 
-// Logout
-document.getElementById('logoutBtn').addEventListener('click', ()=>{ adminLogged=false; updateComposer(false); alert('Logged out') });
-
-// ------------------ Initialize ------------------
+/* ----------------- Startup ----------------- */
+function startLymo(){loadPosts();}
 loadSecrets();
 </script>
+
 </body>
 </html>
