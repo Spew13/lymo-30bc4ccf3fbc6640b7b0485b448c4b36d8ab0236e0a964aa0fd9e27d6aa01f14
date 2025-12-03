@@ -1,164 +1,581 @@
+
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Lymo</title>
+<link rel="manifest" href="assets/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+<link rel="shortcut icon" href="assets/favicon.ico">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lymo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#071017;
+    --card:#081018;
+    --lime-1:#c7ff5a;
+    --lime-2:#8ef23b;
+    --muted:#9fb1b1;
+    --glass: rgba(255,255,255,0.03);
+    --radius:14px;
+    --shadow: 0 12px 40px rgba(2,8,10,0.6);
+    --accent: linear-gradient(90deg,var(--lime-1),var(--lime-2));
+    --ease:cubic-bezier(.16,.84,.32,1);
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color-scheme: dark;
+  }
 
-  <link rel="manifest" href="assets/manifest.json">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  /* Animated background */
+  body{
+    margin:0; padding:28px;
+    background:
+      radial-gradient(500px 300px at 8% 10%, rgba(140,255,120,0.06), transparent 10%),
+      radial-gradient(700px 420px at 92% 90%, rgba(140,255,120,0.03), transparent 6%),
+      linear-gradient(180deg,#04060a 0%, #071017 100%);
+    color:#e6f5e9;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    min-height:100vh;
+  }
 
-  <!-- ORIGINAL CSS (untouched) -->
-  <style>
-    :root{
-      --bg:#071017;
-      --card:#081018;
-      --lime-1:#c7ff5a;
-      --lime-2:#8ef23b;
-      --muted:#9fb1b1;
-      --glass: rgba(255,255,255,0.03);
-      --radius:14px;
-      --shadow: 0 12px 40px rgba(2,8,10,0.6);
-      --accent: linear-gradient(90deg,var(--lime-1),var(--lime-2));
-      --ease:cubic-bezier(.16,.84,.32,1);
-      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color-scheme: dark;
-    }
-    body{
-      margin:0; padding:28px;
-      background:
-        radial-gradient(500px 300px at 8% 10%, rgba(140,255,120,0.06), transparent 10%),
-        radial-gradient(700px 420px at 92% 90%, rgba(140,255,120,0.03), transparent 6%),
-        linear-gradient(180deg,#04060a 0%, #071017 100%);
-      color:#e6f5e9;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      min-height:100vh;
-    }
-    header{ display:flex; align-items:center; gap:16px; position:sticky; top:18px; z-index:40;
-      backdrop-filter: blur(6px); padding:10px 12px; border-radius:12px;
-      border:1px solid rgba(255,255,255,0.03);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      box-shadow: 0 8px 40px rgba(2,8,10,0.55);
-    }
-    .logo{ display:flex; align-items:center; gap:10px; background:var(--accent); color:#041b07; padding:10px 14px; border-radius:12px; font-weight:800; letter-spacing:0.6px; }
-    .logo .dot{width:12px;height:12px;border-radius:3px;background:#063;box-shadow:0 0 18px rgba(183,255,76,0.6) inset}
-    .search{margin-left:auto; display:flex; gap:8px; align-items:center; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); color:var(--lime-1)}
-    .search input{background:transparent;border:0;outline:none;color:inherit;width:180px;font-weight:600}
-    main{display:grid; grid-template-columns: 1fr 320px; gap:22px; margin-top:18px; align-items:start}
-    .feed{max-width:940px;}
-    .btn{background:transparent;border:1px solid rgba(255,255,255,0.04); padding:9px 12px;border-radius:10px;color:var(--lime-1); cursor:pointer; font-weight:700; transition:transform .12s var(--ease), box-shadow .12s var(--ease)}
-    .btn.primary{background:var(--accent); color:#05220b; border:none; box-shadow: 0 10px 30px rgba(142,242,59,0.08)}
-    .composer{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:12px; padding:14px; margin-bottom:14px; border:1px solid rgba(255,255,255,0.03);
-      display:flex; gap:12px; align-items:flex-start; box-shadow: 0 6px 20px rgba(2,8,10,0.45);
-      transition: transform .18s var(--ease), box-shadow .18s var(--ease);}
-    .composer.disabled{opacity:0.55; filter:grayscale(.06); pointer-events:none}
-    textarea{flex:1; min-height:68px; resize:vertical; background:transparent; border:1px dashed rgba(255,255,255,0.03); padding:10px; border-radius:10px; color:inherit; font-size:14px; outline:none}
-    .post{background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); border-radius:14px; padding:12px; display:flex; gap:12px; border:1px solid rgba(255,255,255,0.03); margin-bottom:12px; align-items:flex-start; box-shadow: 0 10px 30px rgba(2,8,10,0.35);}
-    .avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(180deg,#0a1,#012);display:flex;align-items:center;justify-content:center;font-weight:800;color:#071017}
-  </style>
+  header{
+    display:flex; align-items:center; gap:16px;
+    position:sticky; top:18px; z-index:40;
+    backdrop-filter: blur(6px);
+    padding:10px 12px; border-radius:12px;
+    border:1px solid rgba(255,255,255,0.03);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: 0 8px 40px rgba(2,8,10,0.55);
+  }
+
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    background:var(--accent); color:#041b07;
+    padding:10px 14px;border-radius:12px;
+    font-weight:800; letter-spacing:0.6px;
+  }
+  .logo .dot{width:12px;height:12px;border-radius:3px;background:#063;box-shadow:0 0 18px rgba(183,255,76,0.6) inset}
+
+  .search{margin-left:auto; display:flex; gap:8px; align-items:center; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); color:var(--lime-1)}
+  .search input{background:transparent;border:0;outline:none;color:inherit;width:180px;font-weight:600}
+
+  main{display:grid; grid-template-columns: 1fr 320px; gap:22px; margin-top:18px; align-items:start}
+
+/* Feed */
+  .feed{max-width:940px;}
+  .controls{display:flex; gap:10px; align-items:center; margin-bottom:14px}
+  .btn{background:transparent;border:1px solid rgba(255,255,255,0.04); padding:9px 12px;border-radius:10px;color:var(--lime-1); cursor:pointer; font-weight:700; transition:transform .12s var(--ease), box-shadow .12s var(--ease)}
+  .btn:hover{transform:translateY(-3px); box-shadow:var(--shadow)}
+  .btn.primary{background:var(--accent); color:#05220b; border:none; box-shadow: 0 10px 30px rgba(142,242,59,0.08)}
+
+  .composer{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px; padding:14px; margin-bottom:14px; border:1px solid rgba(255,255,255,0.03);
+    display:flex; gap:12px; align-items:flex-start; box-shadow: 0 6px 20px rgba(2,8,10,0.45);
+    transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+  }
+  .composer:hover{transform:translateY(-4px); box-shadow: 0 16px 50px rgba(2,8,10,0.55)}
+  .composer.disabled{opacity:0.55; filter:grayscale(.06); pointer-events:none}
+
+  textarea{flex:1; min-height:68px; resize:vertical; background:transparent; border:1px dashed rgba(255,255,255,0.03); padding:10px; border-radius:10px; color:inherit; font-size:14px; outline:none}
+  .composer .meta{width:160px; display:flex; flex-direction:column; gap:8px}
+  .small{font-size:13px;color:var(--muted)}
+
+  /* posts */
+  .post{background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); border-radius:14px; padding:12px; display:flex; gap:12px; border:1px solid rgba(255,255,255,0.03); margin-bottom:12px; align-items:flex-start; box-shadow: 0 10px 30px rgba(2,8,10,0.35); transform-origin:top center; animation:cardIn .32s var(--ease) both}
+  @keyframes cardIn{from{opacity:0; transform:translateY(8px) scale(.995)} to{opacity:1; transform:translateY(0) scale(1)}}
+
+  .post .votes{width:62px; display:flex; flex-direction:column; align-items:center; gap:8px; padding-top:6px}
+  .vote-btn{background:transparent;border:0; color:var(--muted); font-weight:800; cursor:pointer; font-size:20px; transition:transform .12s var(--ease)}
+  .vote-btn:hover{transform:translateY(-3px)}
+  .score{font-weight:800; font-size:16px; color:var(--lime-1)}
+
+  .post .body{flex:1}
+  .post .title{font-weight:800; font-size:15px; margin-bottom:6px}
+  .post .text{color:var(--muted); font-size:14px; margin-bottom:8px; white-space:pre-wrap}
+  .post .meta{display:flex; gap:10px; align-items:center; font-size:13px; color:var(--muted)}
+  .avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(180deg,#0a1,#012);display:flex;align-items:center;justify-content:center;font-weight:800;color:#071017}
+
+  /* like button */
+  .like-btn{display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border-radius:999px; cursor:pointer; border:1px solid rgba(255,255,255,0.03); background:transparent; transition:all .12s var(--ease)}
+  .like-btn .heart{font-size:18px; transition:transform .12s var(--ease), color .12s}
+  .like-btn.liked{background:linear-gradient(90deg,var(--lime-1),var(--lime-2)); color:#04220a; box-shadow:0 8px 30px rgba(142,242,59,0.08); transform:translateY(-2px)}
+  .like-btn.liked .heart{transform:scale(1.14)}
+
+  /* comment area (collapsed) */
+  .comments{margin-top:8px; display:none; animation:commentIn .2s ease both}
+  .comments.open{display:block}
+  @keyframes commentIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+
+  /* sidebar */
+  aside{position:sticky; top:86px; height:calc(100vh - 140px); overflow:auto; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); box-shadow: 0 8px 40px rgba(2,8,10,0.45)}
+  .widget{padding:12px; border-radius:12px; margin-bottom:12px; background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
+  .widget h4{margin:0 0 8px 0; font-size:14px; color:var(--lime-1)}
+  .liked-list{display:flex; flex-direction:column; gap:8px}
+  .liked-item{display:flex; gap:8px; align-items:flex-start; padding:8px; border-radius:10px; background:rgba(0,0,0,0.04); cursor:pointer; transition:transform .12s var(--ease)}
+  .liked-item:hover{transform:translateY(-4px)}
+  .liked-item .title{font-weight:700; font-size:13px}
+  .muted{color:var(--muted); font-size:13px}
+
+  /* utilities */
+  .tiny{font-size:12px}
+  .flex{display:flex}
+  .gap{gap:8px}
+  .center{display:flex; align-items:center; justify-content:center}
+  .pill{padding:6px 8px; border-radius:999px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03)}
+  a{color:inherit; text-decoration:none}
+  @media (max-width:920px){ main{grid-template-columns:1fr} aside{position:relative; top:auto; height:auto}}
+</style>
 </head>
 <body>
 <header>
   <div class="logo"><div class="dot"></div>Lymo</div>
-  <div class="search"><input id="searchInput" placeholder="Search posts..."></div>
+  <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="searchInput" placeholder="Search posts..."></div>
 </header>
 
 <main>
   <section class="feed">
-    <div id="composer" class="composer disabled">
-      <div class="avatar">ADM</div>
-      <div style="flex:1">
-        <input id="postTitle" placeholder="Post title...">
-        <input id="postImage" placeholder="Image URL (optional)">
-        <textarea id="postBody" placeholder="Write something (admin only)..."></textarea>
-        <button id="submitPost" class="btn primary">Post</button>
+    <div class="controls">
+      <button id="adminToggle" class="btn">Admin</button>
+      <button id="newPostBtn" class="btn primary">New Post</button>
+      <div class="sort" style="margin-left:auto; display:flex; gap:8px; align-items:center">
+        <div class="pill small">Sort</div>
+        <select id="sortSelect" class="btn" style="padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.03);">
+          <option value="hot">Hot</option>
+          <option value="new">New</option>
+          <option value="top">Top</option>
+        </select>
       </div>
     </div>
+
+    <!-- Composer / admin only -->
+    <div id="composer" class="composer disabled" title="Only admins can post">
+      <div class="avatar" style="font-size:13px">ADM</div>
+      <div style="flex:1">
+        <div style="display:flex; gap:8px; align-items:center;">
+          <input id="postTitle" placeholder="Post title..." style="flex:1; padding:8px;border-radius:10px;background:transparent;border:1px dashed rgba(255,255,255,0.03);outline:none;color:inherit;font-weight:700">
+          <input id="postImage" placeholder="Image URL (optional)" style="width:220px;padding:8px;border-radius:10px;background:transparent;border:1px dashed rgba(255,255,255,0.03);outline:none;color:inherit">
+        </div>
+        <textarea id="postBody" placeholder="Write something (admin only)..." style="margin-top:8px"></textarea>
+        <div style="display:flex; gap:8px; margin-top:10px; align-items:center">
+          <button id="submitPost" class="btn primary">Post</button>
+          <div class="small muted">Logged in as <strong id="adminName">Admin</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posts list -->
     <div id="posts"></div>
   </section>
+
+  <!-- Sidebar -->
   <aside>
-    <button id="adminToggle" class="btn">Admin</button>
+    <div class="widget">
+      <h4>Profile</h4>
+      <div style="display:flex; gap:12px; align-items:center">
+        <div class="avatar" style="width:56px;height:56px;border-radius:12px;font-size:18px">LY</div>
+        <div>
+          <div style="font-weight:800">Lymo User</div>
+          <div class="muted tiny">Spew13 community</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:10px">
+        <div class="pill">Karma: <strong id="karmaCount">0</strong></div>
+        <div class="pill">Posts: <strong id="postCount">0</strong></div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <h4>Liked Posts <span id="likedCount" style="float:right" class="muted tiny">0</span></h4>
+      <div id="likedList" class="liked-list">
+        <div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>
+      </div>
+    </div>
+
+    <div class="widget">
+      <h4>Admin Controls</h4>
+      <div style="display:flex; gap:8px; flex-direction:column">
+        <button id="changePassBtn" class="btn">Change Admin Password</button>
+        <button id="logoutBtn" class="btn">Logout Admin</button>
+      </div>
+    </div>
   </aside>
 </main>
-
-<!-- APPWRITE SCRIPT -->
-<script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+ <script>
+function _0x3540(){const _0x580a6f=['5ciTZjc','1564AAUWru','684fnwmto','toLowerCase','innerHTML','46370QBWXPP','assets/secure/goon.com','7107300UGgcmj','epic\x20secret\x20thing','<h1\x20style=\x27color:red;text-align:center;margin-top:100px\x27>FATAL\x20ERROR<br>Missing/Corrupt\x20Files</h1>','spew13.github.io','1001502IjwOFc','?v=','function','file\x20fail','1142480kPuLTn','hostname','file:','5784UhDKCc','<div\x20style=\x27color:red;font-size:30px;text-align:center;padding-top:100px\x27>ERROR\x2013\x20-\x20Unauthorized\x20Copy</div>','22DdYDZk','blocked','body','text','documentElement','assets/secure/beans.data','protocol','2971sGdADT','assets/secure/hi.hi','File\x20fail:','4747908NjFSqs','42zvepPN','assets/secure/cheese.bin'];_0x3540=function(){return _0x580a6f;};return _0x3540();}function _0x30bb(_0x1b161e,_0x9817eb){const _0x3540a6=_0x3540();return _0x30bb=function(_0x30bb3d,_0x1af4fc){_0x30bb3d=_0x30bb3d-0x10b;let _0x132526=_0x3540a6[_0x30bb3d];return _0x132526;},_0x30bb(_0x1b161e,_0x9817eb);}(function(_0x4d5788,_0x110573){const _0x1e6bcd=_0x30bb,_0x5ac2e2=_0x4d5788();while(!![]){try{const _0x360f9b=parseInt(_0x1e6bcd(0x11f))/0x1*(-parseInt(_0x1e6bcd(0x118))/0x2)+parseInt(_0x1e6bcd(0x116))/0x3*(-parseInt(_0x1e6bcd(0x126))/0x4)+-parseInt(_0x1e6bcd(0x125))/0x5*(-parseInt(_0x1e6bcd(0x10f))/0x6)+parseInt(_0x1e6bcd(0x123))/0x7*(parseInt(_0x1e6bcd(0x113))/0x8)+parseInt(_0x1e6bcd(0x127))/0x9*(parseInt(_0x1e6bcd(0x12a))/0xa)+parseInt(_0x1e6bcd(0x122))/0xb+-parseInt(_0x1e6bcd(0x10b))/0xc;if(_0x360f9b===_0x110573)break;else _0x5ac2e2['push'](_0x5ac2e2['shift']());}catch(_0x462e58){_0x5ac2e2['push'](_0x5ac2e2['shift']());}}}(_0x3540,0x68bd5),((async()=>{const _0x2570b9=_0x30bb,_0x6c8a47=[_0x2570b9(0x11d),_0x2570b9(0x124),_0x2570b9(0x12b),'assets/secure/mewing.streak',_0x2570b9(0x120)],_0x38003c=_0x2570b9(0x10c),_0x4f54a8=async _0x3999ab=>{const _0x20063c=_0x2570b9;try{const _0x4c85a3=await fetch(_0x3999ab+_0x20063c(0x110)+Math['random']());if(!_0x4c85a3['ok'])throw 0x1;const _0xb312aa=await _0x4c85a3[_0x20063c(0x11b)]();if(!_0xb312aa[_0x20063c(0x128)]()['includes'](_0x38003c))throw 0x2;}catch(_0x51b198){return console['error'](_0x20063c(0x121),_0x3999ab,_0x51b198),![];}return!![];};if(location['protocol']===_0x2570b9(0x115)||location['hostname']!==_0x2570b9(0x10e)){document['body']['innerHTML']='<div\x20style=\x27color:red;font-size:30px;text-align:center;padding-top:100px\x27>ERROR\x2013\x20-\x20Unauthorized\x20Copy</div>';throw new Error(_0x2570b9(0x119));}let _0x1adc91=!![];for(const _0x5dc8ce of _0x6c8a47)if(!await _0x4f54a8(_0x5dc8ce))_0x1adc91=![];if(!_0x1adc91){document[_0x2570b9(0x11a)][_0x2570b9(0x129)]=_0x2570b9(0x10d);throw new Error(_0x2570b9(0x112));}if(typeof initGame===_0x2570b9(0x111))initGame();})()),(function(){const _0xbe7b5f=_0x30bb,_0x594b7e=_0xbe7b5f(0x10e);if(location[_0xbe7b5f(0x11e)]===_0xbe7b5f(0x115)||location[_0xbe7b5f(0x114)]!==_0x594b7e){document[_0xbe7b5f(0x11c)][_0xbe7b5f(0x129)]=_0xbe7b5f(0x117);throw new Error(_0xbe7b5f(0x119));}}()));
+</script>
 <script>
-  const client = new Appwrite.Client()
-    .setEndpoint("https://nyc.cloud.appwrite.io/v1")
-    .setProject("6930516e001b85af6b1e");
+/* ---------------------------
+   Data layer (localStorage)
+   --------------------------- */
+const STORAGE_KEYS = {
+  LIKED: 'lymo_liked_v1'
+};
 
-  const account = new Appwrite.Account(client);
-  const storage = new Appwrite.Storage(client);
+function uid(){ return 'p_' + Math.random().toString(36).slice(2,10) }
 
-  let posts = [];
-  let adminPassword = '';
-  let adminLogged = false;
+function _0x2236(_0x193ded,_0x2495f2){const _0x2f3a0c=_0x2f3a();return _0x2236=function(_0x22360f,_0x3d2a0a){_0x22360f=_0x22360f-0x1a3;let _0x13a949=_0x2f3a0c[_0x22360f];return _0x13a949;},_0x2236(_0x193ded,_0x2495f2);}function _0x2f3a(){const _0x404272=['367323KyDvaH','174582ugXlOJ','18366TBgJmr','1516160SApeDB','56026bwcMVu','46504PyDgAg','579135KAqQIJ','315dLfRDW','2OHbJyf','$2a$10$SjcbvSnjiyFfuDwOzew2b.CtowaaptWCm38KZikWrQJRgyCp3owqS','60CRTYrj','150TWURJk','6913350cae596e708f5286c8','364DOyNGN'];_0x2f3a=function(){return _0x404272;};return _0x2f3a();}const _0x5a76ef=_0x2236;(function(_0x483dc4,_0x5e0897){const _0x3c0a43=_0x2236,_0x27a7af=_0x483dc4();while(!![]){try{const _0x11db47=parseInt(_0x3c0a43(0x1a4))/0x1+-parseInt(_0x3c0a43(0x1a8))/0x2*(parseInt(_0x3c0a43(0x1a6))/0x3)+parseInt(_0x3c0a43(0x1a3))/0x4+-parseInt(_0x3c0a43(0x1a7))/0x5*(parseInt(_0x3c0a43(0x1b0))/0x6)+-parseInt(_0x3c0a43(0x1ad))/0x7*(parseInt(_0x3c0a43(0x1a5))/0x8)+-parseInt(_0x3c0a43(0x1af))/0x9*(-parseInt(_0x3c0a43(0x1ab))/0xa)+-parseInt(_0x3c0a43(0x1ae))/0xb*(-parseInt(_0x3c0a43(0x1aa))/0xc);if(_0x11db47===_0x5e0897)break;else _0x27a7af['push'](_0x27a7af['shift']());}catch(_0x571256){_0x27a7af['push'](_0x27a7af['shift']());}}}(_0x2f3a,0x32025));const ADMIN_POST_BIN_ID=_0x5a76ef(0x1ac),API_KEY=_0x5a76ef(0x1a9);
 
-  async function loadSecrets() {
-    await account.createAnonymousSession();
-    const fileBlob = await storage.getFileView("69305285002f8b73e74a", "69305332002860f9ba24");
-    const text = await fileBlob.text();
-    const secrets = JSON.parse(text);
-    window.API_KEY = secrets.apikey;
-    window.JSONBIN_ID = secrets.binid;
-    loadPosts();
-  }
-
-  async function loadPosts() {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${window.JSONBIN_ID}/latest`, {
-      headers:{ "X-Master-Key": window.API_KEY }
+async function loadPosts(){
+  try{
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}/latest`, {
+      headers: { "X-Master-Key": API_KEY }
     });
     const data = await res.json();
+    
+    // FIX: Extract both posts and adminPassword
     posts = data?.record?.posts || [];
-    adminPassword = data?.record?.adminPassword || '';
-    renderPosts();
+    adminPassword = data?.record?.adminPassword || ''; // <-- SET GLOBAL STATE
+    
+    renderPosts(document.getElementById('searchInput').value);
+    renderLikedList();
+  }catch(e){
+    console.error("Failed to load posts", e);
+    alert("Failed to load posts");
   }
+}
 
-  async function savePosts() {
-    await fetch(`https://api.jsonbin.io/v3/b/${window.JSONBIN_ID}`, {
-      method:"PUT",
-      headers: { "Content-Type":"application/json", "X-Master-Key": window.API_KEY },
-      body: JSON.stringify({ posts, adminPassword })
+async function savePosts(){
+  try{
+    // FIX: Include the adminPassword in the data we save
+    const dataToSave = { 
+        posts: posts, 
+        adminPassword: adminPassword // <-- ADD THIS
+    };
+    
+    await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
+      body: JSON.stringify(dataToSave) // <-- Use the combined object
     });
+  }catch(e){
+    console.error("Failed to save data", e);
+    alert("Failed to save data (posts and password)");
   }
+}
+  
+function loadLikedSet(){
+  try{
+    return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED) || '[]'))
+  }catch(e){ return new Set() }
+}
+function saveLikedSet(set){
+  localStorage.setItem(STORAGE_KEYS.LIKED, JSON.stringify(Array.from(set)))
+}
 
-  function renderPosts() {
-    const postsEl = document.getElementById('posts');
-    postsEl.innerHTML = '';
-    posts.forEach(p=>{
-      const node = document.createElement('div');
-      node.className='post';
-      node.innerHTML=`<strong>${p.title}</strong><p>${p.body}</p>`;
-      postsEl.appendChild(node);
-    });
+/* ---------------------------
+   App state
+   --------------------------- */
+let posts = []; // Must be initialized as an empty array
+let adminPassword = ''; // <-- NEW: Holds the current password
+let liked = loadLikedSet()
+let adminLogged = false
+let adminName = 'Admin'
+/* ---------------------------
+   Rendering
+   --------------------------- */
+const postsEl = document.getElementById('posts')
+const likedListEl = document.getElementById('likedList')
+const likedCountEl = document.getElementById('likedCount')
+const postCountEl = document.getElementById('postCount')
+const karmaEl = document.getElementById('karmaCount')
+
+function renderPosts(filterText=''){
+  postsEl.innerHTML = ''
+  const sort = document.getElementById('sortSelect').value
+  let list = [...posts]
+  if(sort === 'new') list.sort((a,b)=>b.created - a.created)
+  else if(sort === 'top') list.sort((a,b)=>b.score - a.score)
+  else list.sort((a,b)=> (b.score + (Date.now()-b.created)/10000000) - (a.score + (Date.now()-a.created)/10000000)) // hot-ish
+
+  if(filterText) list = list.filter(p => (p.title + ' ' + p.body).toLowerCase().includes(filterText.toLowerCase()))
+
+  list.forEach(p => {
+    const node = document.createElement('div')
+    node.className = 'post'
+    node.id = 'post_'+p.id
+    node.innerHTML = `
+      <div class="votes">
+        <button class="vote-btn" data-action="up" title="Upvote">▲</button>
+        <div class="score">${p.score}</div>
+        <button class="vote-btn" data-action="down" title="Downvote">▼</button>
+      </div>
+      <div class="body">
+        <div class="title">${escapeHtml(p.title)}</div>
+        ${p.img ? `<div style="margin:8px 0"><img src="${escapeAttr(p.img)}" style="max-width:100%;border-radius:10px;display:block"></div>` : ''}
+        <div class="text">${escapeHtml(p.body)}</div>
+        <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
+          <button class="like-btn ${liked.has(p.id) ? 'liked' : ''}" data-like="${p.id}" title="Save to Liked">
+            <span class="heart">${liked.has(p.id) ? '♥' : '♡'}</span>
+            <span class="muted tiny">${liked.has(p.id) ? 'Saved' : 'Save'}</span>
+          </button>
+          <div class="muted tiny">Posted <strong>${timeAgo(p.created)}</strong></div>
+        </div>
+        <div class="comments" id="comments_${p.id}"></div>
+      </div>
+    `
+    // attach vote handlers
+    const up = node.querySelector('[data-action="up"]')
+    const down = node.querySelector('[data-action="down"]')
+    const scoreEl = node.querySelector('.score')
+    // Corrected Vote Handlers:
+up.addEventListener('click', ()=>{ p.score += 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
+down.addEventListener('click', ()=>{ p.score -= 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
+    // like handler
+    const likeBtn = node.querySelector('[data-like]')
+    likeBtn.addEventListener('click', (e)=>{
+      e.currentTarget.classList.toggle('liked')
+      const id = e.currentTarget.getAttribute('data-like')
+      if(liked.has(id)){ liked.delete(id) } else { liked.add(id) }
+      saveLikedSet(liked)
+      // update button text/icon
+      e.currentTarget.querySelector('.heart').textContent = liked.has(id) ? '♥' : '♡'
+      e.currentTarget.querySelector('.tiny').textContent = liked.has(id) ? 'Saved' : 'Save'
+      renderLikedList()
+    })
+
+    postsEl.appendChild(node)
+  })
+
+  postCountEl.textContent = posts.length
+  updateKarma()
+}
+
+function renderLikedList(){
+  const likedArr = Array.from(liked)
+  likedListEl.innerHTML = ''
+  likedCountEl.textContent = likedArr.length
+  if(likedArr.length === 0){
+    likedListEl.innerHTML = `<div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>`
+    return
   }
+  likedArr.forEach(id => {
+    const p = posts.find(x=>x.id === id)
+    if(!p) return // post could have been removed
+    const el = document.createElement('div')
+    el.className = 'liked-item'
+    el.innerHTML = `
+      <div style="flex:1">
+        <div class="title">${escapeHtml(p.title)}</div>
+        <div class="muted tiny">Score <strong>${p.score}</strong> • ${timeAgo(p.created)}</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:6px; align-items:center">
+        <button class="btn tiny open-btn" data-id="${p.id}">Open</button>
+        <button class="btn tiny remove-like" data-id="${p.id}">Remove</button>
+      </div>
+    `
+    // open: scroll to post
+    el.querySelector('.open-btn').addEventListener('click', ()=>{
+      const target = document.getElementById('post_' + p.id)
+      if(target){
+        target.scrollIntoView({behavior:'smooth', block:'center'})
+        // brief highlight
+        target.animate([{boxShadow:'0 0 0 0 rgba(0,0,0,0)'},{boxShadow:'0 12px 40px rgba(142,242,59,0.12)'}], {duration:600, fill:'forwards'})
+      }
+    })
+    // remove like
+    el.querySelector('.remove-like').addEventListener('click', ()=>{
+      liked.delete(p.id)
+      saveLikedSet(liked)
+      renderLikedList()
+      renderPosts(document.getElementById('searchInput').value)
+    })
 
-  document.getElementById('submitPost').addEventListener('click', async ()=>{
-    if(!adminLogged){
-      const pass = prompt('Enter admin password:');
-      if(pass !== adminPassword) return alert('Wrong password');
-      adminLogged=true;
-      document.getElementById('composer').classList.remove('disabled');
+    likedListEl.appendChild(el)
+  })
+}
+
+function updateKarma(){
+  // simple karma: sum of positive scores
+  const k = posts.reduce((s,p)=> s + Math.max(0, p.score), 0)
+  karmaEl.textContent = k
+}
+
+/* ---------------------------
+   Utilities
+   --------------------------- */
+function escapeHtml(s = ''){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+function escapeAttr(s=''){ return String(s).replace(/"/g,'&quot;') }
+function timeAgo(ts){
+  const s = Math.floor((Date.now()-ts)/1000)
+  if(s < 60) return s + 's ago'
+  if(s < 3600) return Math.floor(s/60) + 'm ago'
+  if(s < 86400) return Math.floor(s/3600) + 'h ago'
+  return Math.floor(s/86400) + 'd ago'
+}
+
+/* ---------------------------
+   Composer / Admin
+   --------------------------- */
+const composerEl = document.getElementById('composer')
+const submitBtn = document.getElementById('submitPost')
+const postTitle = document.getElementById('postTitle')
+const postBody = document.getElementById('postBody')
+const postImage = document.getElementById('postImage')
+const adminToggle = document.getElementById('adminToggle')
+const changePassBtn = document.getElementById('changePassBtn')
+const logoutBtn = document.getElementById('logoutBtn')
+const adminNameEl = document.getElementById('adminName')
+
+/* --------------------------- Composer / Admin FIX --------------------------- */
+
+function updateAdminUI(){
+  if(adminLogged){
+    composerEl.classList.remove('disabled')
+    document.getElementById('postBody').placeholder = ''
+    adminToggle.textContent = 'Admin ✓'
+    adminNameEl.textContent = adminName
+  } else {
+    composerEl.classList.add('disabled')
+    adminToggle.textContent = 'Admin'
+    adminNameEl.textContent = 'Admin'
+  }
+}
+
+/* ---------------------------
+   Composer / Admin FIX
+   --------------------------- */
+function requireAdminPrompt(){
+    
+    // 1. Check if a password exists (if not, prompt to set one)
+    if (!adminPassword) {
+        alert("No Admin password found on JSONBin. You must set one first.");
+        const newPass = prompt("Please set the new Admin password:");
+        if (newPass) {
+            adminPassword = newPass; // Set global state
+            savePosts(); // Save the new password to JSONBin
+            alert("Admin password set and saved to JSONBin! Please log in now.");
+        }
+        return false;
     }
-    const title = document.getElementById('postTitle').value || '(no title)';
-    const body = document.getElementById('postBody').value || '';
-    const newPost = { id:Date.now().toString(), title, body, score:0, created:Date.now() };
-    posts.unshift(newPost);
-    await savePosts();
-    renderPosts();
-  });
 
-  document.getElementById('adminToggle').addEventListener('click', ()=>{
-    if(adminLogged){ adminLogged=false; document.getElementById('composer').classList.add('disabled'); }
-    else { const pass=prompt('Enter admin password:'); if(pass===adminPassword){ adminLogged=true; document.getElementById('composer').classList.remove('disabled'); }}
-  });
+    // 2. Regular Login Check
+    const pass = prompt('Enter admin password:');
+    if(pass === null) return false;
 
-  loadSecrets();
+    if(pass === adminPassword){ // <-- Check against the global state pulled from JSONBin
+        alert("Logged in as admin!");
+        adminLogged = true
+        adminName = 'Admin'
+        updateAdminUI()
+        composerEl.classList.remove('disabled')
+        postTitle.focus()
+        return true
+    } else {
+        alert('Wrong password')
+        return false
+    }
+}
+  // KEEP THIS BLOCK:
+adminToggle.addEventListener('click', ()=>{
+    if(adminLogged){
+        // If logged in, prompt to log out
+        if(confirm('Logout admin?')){
+            adminLogged = false
+            updateAdminUI()
+        }
+    } else {
+        // If logged out, prompt to log in
+        requireAdminPrompt() // This now correctly calls the NEW, JSONBin-compatible version
+    }
+});
+  
+submitBtn.addEventListener('click', async ()=>{ // <-- The FIX: 'async' is mandatory here
+  if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
+  const t = postTitle.value.trim()
+  const b = postBody.value.trim()
+  const img = postImage.value.trim()
+  if(!t && !b){ alert('Write a title or body') ; return }
+  const newPost = { id: uid(), title: t || '(no title)', body: b, score: 0, created: Date.now(), img: img }
+  posts.unshift(newPost)
+  
+  await savePosts() // This line now runs without error
+  
+  postTitle.value = ''
+  postBody.value = ''
+  postImage.value = ''
+  renderPosts(document.getElementById('searchInput').value)
+  renderLikedList()
+})
+changePassBtn.addEventListener('click', ()=>{
+  if(!adminLogged){
+    alert('Login as admin first')
+    return
+  }
+  
+  const next = prompt('Enter new admin password:')
+  
+  if(next === null || next.trim() === ''){
+    alert('Password change cancelled or new password was empty.')
+    return
+  }
+  
+  // Update global state and save everything to JSONBin
+  adminPassword = next.trim();
+  savePosts(); // Saves the new password to the remote bin
+  
+  alert('Admin password successfully changed and saved to JSONBin.')
+})
+
+logoutBtn.addEventListener('click', ()=>{
+  if(confirm('Logout admin?')){
+    adminLogged = false
+    updateAdminUI()
+  }
+})
+
+/* ---------------------------
+   Search / Sort / Init
+   --------------------------- */
+document.getElementById('sortSelect').addEventListener('change', ()=> renderPosts(document.getElementById('searchInput').value))
+document.getElementById('searchInput').addEventListener('input', (e)=> renderPosts(e.target.value))
+document.getElementById('newPostBtn').addEventListener('click', ()=> {
+  if(!adminLogged){
+    if(confirm('Only admins can post. Log in as admin now?')){
+      requireAdminPrompt()
+    }
+  } else {
+    document.getElementById('postBody').focus()
+  }
+})
+
+/* ---------------------------
+   Load / Save liked on startup
+   --------------------------- */
+loadPosts()  // async fetch from JSONBin instead of localStorage
+renderLikedList()
 </script>
 </body>
+    <script>
+(function() {
+    const allowedHost = "https://spew13.github.io/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14/";
+    if (location.protocol === "file:" || location.hostname !== allowedHost) {
+        document.documentElement.innerHTML = `
+            <style>
+                body {
+                    background: #1b0000;
+                    color: #ff4444;
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    padding-top: 100px;
+                }
+                .err {
+                    font-size: 40px;
+                    font-weight: bold;
+                }
+                .sub {
+                    font-size: 20px;
+                    margin-top: 20px;
+                    opacity: 0.8;
+                }
+            </style>
+            <div class="err">ERROR 67 :) — Unauthorized Copy</div>
+            <div class="sub">This site cannot run offline or from a saved file.<br>
+            Load it at <b>https://spew13.github.io/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14/</b></div>
+        `;
+        throw new Error("Unauthorized offline/local execution blocked.");
+    }
+})();
+</script>
 </html>
