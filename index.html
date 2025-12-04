@@ -215,11 +215,37 @@ const STORAGE_KEYS = {
 
 function uid(){ return 'p_' + Math.random().toString(36).slice(2,10) }
 
-function _0x2236(_0x193ded,_0x2495f2){const _0x2f3a0c=_0x2f3a();return _0x2236=function(_0x22360f,_0x3d2a0a){_0x22360f=_0x22360f-0x1a3;let _0x13a949=_0x2f3a0c[_0x22360f];return _0x13a949;},_0x2236(_0x193ded,_0x2495f2);}function _0x2f3a(){const _0x404272=['367323KyDvaH','174582ugXlOJ','18366TBgJmr','1516160SApeDB','56026bwcMVu','46504PyDgAg','579135KAqQIJ','315dLfRDW','2OHbJyf','$2a$10$SjcbvSnjiyFfuDwOzew2b.CtowaaptWCm38KZikWrQJRgyCp3owqS','60CRTYrj','150TWURJk','6913350cae596e708f5286c8','364DOyNGN'];_0x2f3a=function(){return _0x404272;};return _0x2f3a();}const _0x5a76ef=_0x2236;(function(_0x483dc4,_0x5e0897){const _0x3c0a43=_0x2236,_0x27a7af=_0x483dc4();while(!![]){try{const _0x11db47=parseInt(_0x3c0a43(0x1a4))/0x1+-parseInt(_0x3c0a43(0x1a8))/0x2*(parseInt(_0x3c0a43(0x1a6))/0x3)+parseInt(_0x3c0a43(0x1a3))/0x4+-parseInt(_0x3c0a43(0x1a7))/0x5*(parseInt(_0x3c0a43(0x1b0))/0x6)+-parseInt(_0x3c0a43(0x1ad))/0x7*(parseInt(_0x3c0a43(0x1a5))/0x8)+-parseInt(_0x3c0a43(0x1af))/0x9*(-parseInt(_0x3c0a43(0x1ab))/0xa)+-parseInt(_0x3c0a43(0x1ae))/0xb*(-parseInt(_0x3c0a43(0x1aa))/0xc);if(_0x11db47===_0x5e0897)break;else _0x27a7af['push'](_0x27a7af['shift']());}catch(_0x571256){_0x27a7af['push'](_0x27a7af['shift']());}}}(_0x2f3a,0x32025));const ADMIN_POST_BIN_ID=_0x5a76ef(0x1ac),API_KEY=_0x5a76ef(0x1a9);
 
-async function loadPosts(){
+async function loadKeys() {
+  const files = [
+    '/internal/runtime/configA.ymlx',
+    '/internal/runtime/configB.ymlx',
+    '/internal/runtime/configC.ymlx'
+  ];
+
+  const texts = await Promise.all(files.map(f => fetch(f).then(r => r.text())));
+
+  const API_KEY = texts.map(t =>
+    (t.match(/uix\d:\s*"([^"]+)"/) || [])[1]
+  ).join('');
+
+  const BIN_ID = texts.map(t =>
+    (t.match(/ui\d:\s*"([^"]+)"/) || [])[1]
+  ).join('');
+
+  window.API_KEY = API_KEY;
+  window.BIN_ID = BIN_ID;
+}
+
+loadKeys().then(() => {
+
+
+
+});
+
+
   try{
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}/latest`, {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
       headers: { "X-Master-Key": API_KEY }
     });
     const data = await res.json();
