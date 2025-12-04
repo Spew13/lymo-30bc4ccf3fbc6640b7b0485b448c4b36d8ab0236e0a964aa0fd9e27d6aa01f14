@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -149,7 +148,6 @@
       </div>
     </div>
 
-    <!-- Composer / admin only -->
     <div id="composer" class="composer disabled" title="Only admins can post">
       <div class="avatar" style="font-size:13px">ADM</div>
       <div style="flex:1">
@@ -165,11 +163,9 @@
       </div>
     </div>
 
-    <!-- Posts list -->
     <div id="posts"></div>
   </section>
 
-  <!-- Sidebar -->
   <aside>
     <div class="widget">
       <h4>Profile</h4>
@@ -202,238 +198,41 @@
     </div>
   </aside>
 </main>
- <script>
-function _0x3540(){const _0x580a6f=['5ciTZjc','1564AAUWru','684fnwmto','toLowerCase','innerHTML','46370QBWXPP','assets/secure/goon.com','7107300UGgcmj','epic\x20secret\x20thing','<h1\x20style=\x27color:red;text-align:center;margin-top:100px\x27>FATAL\x20ERROR<br>Missing/Corrupt\x20Files</h1>','spew13.github.io','1001502IjwOFc','?v=','function','file\x20fail','1142480kPuLTn','hostname','file:','5784UhDKCc','<div\x20style=\x27color:red;font-size:30px;text-align:center;padding-top:100px\x27>ERROR\x2013\x20-\x20Unauthorized\x20Copy</div>','22DdYDZk','blocked','body','text','documentElement','assets/secure/beans.data','protocol','2971sGdADT','assets/secure/hi.hi','File\x20fail:','4747908NjFSqs','42zvepPN','assets/secure/cheese.bin'];_0x3540=function(){return _0x580a6f;};return _0x3540();}function _0x30bb(_0x1b161e,_0x9817eb){const _0x3540a6=_0x3540();return _0x30bb=function(_0x30bb3d,_0x1af4fc){_0x30bb3d=_0x30bb3d-0x10b;let _0x132526=_0x3540a6[_0x30bb3d];return _0x132526;},_0x30bb(_0x1b161e,_0x9817eb);}(function(_0x4d5788,_0x110573){const _0x1e6bcd=_0x30bb,_0x5ac2e2=_0x4d5788();while(!![]){try{const _0x360f9b=parseInt(_0x1e6bcd(0x11f))/0x1*(-parseInt(_0x1e6bcd(0x118))/0x2)+parseInt(_0x1e6bcd(0x116))/0x3*(-parseInt(_0x1e6bcd(0x126))/0x4)+-parseInt(_0x1e6bcd(0x125))/0x5*(-parseInt(_0x1e6bcd(0x10f))/0x6)+parseInt(_0x1e6bcd(0x123))/0x7*(parseInt(_0x1e6bcd(0x113))/0x8)+parseInt(_0x1e6bcd(0x127))/0x9*(parseInt(_0x1e6bcd(0x12a))/0xa)+parseInt(_0x1e6bcd(0x122))/0xb+-parseInt(_0x1e6bcd(0x10b))/0xc;if(_0x360f9b===_0x110573)break;else _0x5ac2e2['push'](_0x5ac2e2['shift']());}catch(_0x462e58){_0x5ac2e2['push'](_0x5ac2e2['shift']());}}}(_0x3540,0x68bd5),((async()=>{const _0x2570b9=_0x30bb,_0x6c8a47=[_0x2570b9(0x11d),_0x2570b9(0x124),_0x2570b9(0x12b),'assets/secure/mewing.streak',_0x2570b9(0x120)],_0x38003c=_0x2570b9(0x10c),_0x4f54a8=async _0x3999ab=>{const _0x20063c=_0x2570b9;try{const _0x4c85a3=await fetch(_0x3999ab+_0x20063c(0x110)+Math['random']());if(!_0x4c85a3['ok'])throw 0x1;const _0xb312aa=await _0x4c85a3[_0x20063c(0x11b)]();if(!_0xb312aa[_0x20063c(0x128)]()['includes'](_0x38003c))throw 0x2;}catch(_0x51b198){return console['error'](_0x20063c(0x121),_0x3999ab,_0x51b198),![];}return!![];};if(location['protocol']===_0x2570b9(0x115)||location['hostname']!==_0x2570b9(0x10e)){document['body']['innerHTML']='<div\x20style=\x27color:red;font-size:30px;text-align:center;padding-top:100px\x27>ERROR\x2013\x20-\x20Unauthorized\x20Copy</div>';throw new Error(_0x2570b9(0x119));}let _0x1adc91=!![];for(const _0x5dc8ce of _0x6c8a47)if(!await _0x4f54a8(_0x5dc8ce))_0x1adc91=![];if(!_0x1adc91){document[_0x2570b9(0x11a)][_0x2570b9(0x129)]=_0x2570b9(0x10d);throw new Error(_0x2570b9(0x112));}if(typeof initGame===_0x2570b9(0x111))initGame();})()),(function(){const _0xbe7b5f=_0x30bb,_0x594b7e=_0xbe7b5f(0x10e);if(location[_0xbe7b5f(0x11e)]===_0xbe7b5f(0x115)||location[_0xbe7b5f(0x114)]!==_0x594b7e){document[_0xbe7b5f(0x11c)][_0xbe7b5f(0x129)]=_0xbe7b5f(0x117);throw new Error(_0xbe7b5f(0x119));}}()));
-</script>
+
+
 <script>
-/* ---------------------------
-   Data layer (localStorage)
-   --------------------------- */
-const STORAGE_KEYS = {
-  LIKED: 'lymo_liked_v1'
-};
-
-function uid(){ return 'p_' + Math.random().toString(36).slice(2,10) }
-
-
-async function loadKeys() {
-  const files = [
-    '/assets/internal/runtime/configA.ymlx',
-    '/assets/internal/runtime/configB.ymlx',
-    '/assets/internal/runtime/configC.ymlx'
-  ];
-
-  const texts = await Promise.all(files.map(f => fetch(f).then(r => r.text())));
-
-  const API_KEY = texts.map(t =>
-    (t.match(/uix\d:\s*"([^"]+)"/) || [])[1]
-  ).join('');
-
-  const BIN_ID = texts.map(t =>
-    (t.match(/ui\d:\s*"([^"]+)"/) || [])[1]
-  ).join('');
-
-  window.API_KEY = API_KEY;
-  window.BIN_ID = BIN_ID;
-}
-
-loadKeys().then(() => {
-
-
-
-});
-
-
-  try{
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-      headers: { "X-Master-Key": API_KEY }
-    });
-    const data = await res.json();
-    
-    // FIX: Extract both posts and adminPassword
-    posts = data?.record?.posts || [];
-    adminPassword = data?.record?.adminPassword || ''; // <-- SET GLOBAL STATE
-    
-    renderPosts(document.getElementById('searchInput').value);
-    renderLikedList();
-  }catch(e){
-    console.error("Failed to load posts", e);
-    alert("Failed to load posts");
-  }
-}
-
-async function savePosts(){
-  try{
-    // FIX: Include the adminPassword in the data we save
-    const dataToSave = { 
-        posts: posts, 
-        adminPassword: adminPassword // <-- ADD THIS
-    };
-    
-    await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
-      body: JSON.stringify(dataToSave) // <-- Use the combined object
-    });
-  }catch(e){
-    console.error("Failed to save data", e);
-    alert("Failed to save data (posts and password)");
-  }
-}
-  
-function loadLikedSet(){
-  try{
-    return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED) || '[]'))
-  }catch(e){ return new Set() }
-}
-function saveLikedSet(set){
-  localStorage.setItem(STORAGE_KEYS.LIKED, JSON.stringify(Array.from(set)))
-}
+(async function(){
 
 /* ---------------------------
-   App state
-   --------------------------- */
-let posts = []; // Must be initialized as an empty array
-let adminPassword = ''; // <-- NEW: Holds the current password
+   Utilities
+--------------------------- */
+function escapeHtml(s = ''){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+function escapeAttr(s=''){ return String(s).replace(/"/g,'&quot;') }
+function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60)return s+'s ago'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
+function uid(){ return 'p_'+Math.random().toString(36).slice(2,10) }
+
+/* ---------------------------
+   LocalStorage for liked posts
+--------------------------- */
+const STORAGE_KEYS = { LIKED: 'lymo_liked_v1' }
+function loadLikedSet(){ try{ return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED)||'[]')) }catch(e){ return new Set() } }
+function saveLikedSet(set){ localStorage.setItem(STORAGE_KEYS.LIKED, JSON.stringify(Array.from(set))) }
+
+
+let posts=[]
+let adminPassword=''
 let liked = loadLikedSet()
-let adminLogged = false
-let adminName = 'Admin'
+let adminLogged=false
+let adminName='Admin'
+
 /* ---------------------------
-   Rendering
-   --------------------------- */
+   Elements
+--------------------------- */
 const postsEl = document.getElementById('posts')
 const likedListEl = document.getElementById('likedList')
 const likedCountEl = document.getElementById('likedCount')
 const postCountEl = document.getElementById('postCount')
 const karmaEl = document.getElementById('karmaCount')
-
-function renderPosts(filterText=''){
-  postsEl.innerHTML = ''
-  const sort = document.getElementById('sortSelect').value
-  let list = [...posts]
-  if(sort === 'new') list.sort((a,b)=>b.created - a.created)
-  else if(sort === 'top') list.sort((a,b)=>b.score - a.score)
-  else list.sort((a,b)=> (b.score + (Date.now()-b.created)/10000000) - (a.score + (Date.now()-a.created)/10000000)) // hot-ish
-
-  if(filterText) list = list.filter(p => (p.title + ' ' + p.body).toLowerCase().includes(filterText.toLowerCase()))
-
-  list.forEach(p => {
-    const node = document.createElement('div')
-    node.className = 'post'
-    node.id = 'post_'+p.id
-    node.innerHTML = `
-      <div class="votes">
-        <button class="vote-btn" data-action="up" title="Upvote">▲</button>
-        <div class="score">${p.score}</div>
-        <button class="vote-btn" data-action="down" title="Downvote">▼</button>
-      </div>
-      <div class="body">
-        <div class="title">${escapeHtml(p.title)}</div>
-        ${p.img ? `<div style="margin:8px 0"><img src="${escapeAttr(p.img)}" style="max-width:100%;border-radius:10px;display:block"></div>` : ''}
-        <div class="text">${escapeHtml(p.body)}</div>
-        <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
-          <button class="like-btn ${liked.has(p.id) ? 'liked' : ''}" data-like="${p.id}" title="Save to Liked">
-            <span class="heart">${liked.has(p.id) ? '♥' : '♡'}</span>
-            <span class="muted tiny">${liked.has(p.id) ? 'Saved' : 'Save'}</span>
-          </button>
-          <div class="muted tiny">Posted <strong>${timeAgo(p.created)}</strong></div>
-        </div>
-        <div class="comments" id="comments_${p.id}"></div>
-      </div>
-    `
-    // attach vote handlers
-    const up = node.querySelector('[data-action="up"]')
-    const down = node.querySelector('[data-action="down"]')
-    const scoreEl = node.querySelector('.score')
-    // Corrected Vote Handlers:
-up.addEventListener('click', ()=>{ p.score += 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
-down.addEventListener('click', ()=>{ p.score -= 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
-    // like handler
-    const likeBtn = node.querySelector('[data-like]')
-    likeBtn.addEventListener('click', (e)=>{
-      e.currentTarget.classList.toggle('liked')
-      const id = e.currentTarget.getAttribute('data-like')
-      if(liked.has(id)){ liked.delete(id) } else { liked.add(id) }
-      saveLikedSet(liked)
-      // update button text/icon
-      e.currentTarget.querySelector('.heart').textContent = liked.has(id) ? '♥' : '♡'
-      e.currentTarget.querySelector('.tiny').textContent = liked.has(id) ? 'Saved' : 'Save'
-      renderLikedList()
-    })
-
-    postsEl.appendChild(node)
-  })
-
-  postCountEl.textContent = posts.length
-  updateKarma()
-}
-
-function renderLikedList(){
-  const likedArr = Array.from(liked)
-  likedListEl.innerHTML = ''
-  likedCountEl.textContent = likedArr.length
-  if(likedArr.length === 0){
-    likedListEl.innerHTML = `<div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>`
-    return
-  }
-  likedArr.forEach(id => {
-    const p = posts.find(x=>x.id === id)
-    if(!p) return // post could have been removed
-    const el = document.createElement('div')
-    el.className = 'liked-item'
-    el.innerHTML = `
-      <div style="flex:1">
-        <div class="title">${escapeHtml(p.title)}</div>
-        <div class="muted tiny">Score <strong>${p.score}</strong> • ${timeAgo(p.created)}</div>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:6px; align-items:center">
-        <button class="btn tiny open-btn" data-id="${p.id}">Open</button>
-        <button class="btn tiny remove-like" data-id="${p.id}">Remove</button>
-      </div>
-    `
-    // open: scroll to post
-    el.querySelector('.open-btn').addEventListener('click', ()=>{
-      const target = document.getElementById('post_' + p.id)
-      if(target){
-        target.scrollIntoView({behavior:'smooth', block:'center'})
-        // brief highlight
-        target.animate([{boxShadow:'0 0 0 0 rgba(0,0,0,0)'},{boxShadow:'0 12px 40px rgba(142,242,59,0.12)'}], {duration:600, fill:'forwards'})
-      }
-    })
-    // remove like
-    el.querySelector('.remove-like').addEventListener('click', ()=>{
-      liked.delete(p.id)
-      saveLikedSet(liked)
-      renderLikedList()
-      renderPosts(document.getElementById('searchInput').value)
-    })
-
-    likedListEl.appendChild(el)
-  })
-}
-
-function updateKarma(){
-  // simple karma: sum of positive scores
-  const k = posts.reduce((s,p)=> s + Math.max(0, p.score), 0)
-  karmaEl.textContent = k
-}
-
-/* ---------------------------
-   Utilities
-   --------------------------- */
-function escapeHtml(s = ''){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
-function escapeAttr(s=''){ return String(s).replace(/"/g,'&quot;') }
-function timeAgo(ts){
-  const s = Math.floor((Date.now()-ts)/1000)
-  if(s < 60) return s + 's ago'
-  if(s < 3600) return Math.floor(s/60) + 'm ago'
-  if(s < 86400) return Math.floor(s/3600) + 'h ago'
-  return Math.floor(s/86400) + 'd ago'
-}
-
-/* ---------------------------
-   Composer / Admin
-   --------------------------- */
 const composerEl = document.getElementById('composer')
 const submitBtn = document.getElementById('submitPost')
 const postTitle = document.getElementById('postTitle')
@@ -444,134 +243,118 @@ const changePassBtn = document.getElementById('changePassBtn')
 const logoutBtn = document.getElementById('logoutBtn')
 const adminNameEl = document.getElementById('adminName')
 
-/* --------------------------- Composer / Admin FIX --------------------------- */
 
-function updateAdminUI(){
-  if(adminLogged){
-    composerEl.classList.remove('disabled')
-    document.getElementById('postBody').placeholder = ''
-    adminToggle.textContent = 'Admin ✓'
-    adminNameEl.textContent = adminName
-  } else {
-    composerEl.classList.add('disabled')
-    adminToggle.textContent = 'Admin'
-    adminNameEl.textContent = 'Admin'
-  }
+async function loadKeys(){
+  const files = [
+    '/assets/internal/runtime/configA.ymlx',
+    '/assets/internal/runtime/configB.ymlx',
+    '/assets/internal/runtime/configC.ymlx'
+  ];
+  const texts = await Promise.all(files.map(f => fetch(f).then(r=>r.text())))
+  const API_KEY = texts.map(t=>(t.match(/uix\d:\s*"([^"]+)"/)||[])[1]).join('')
+  const BIN_ID = texts.map(t=>(t.match(/ui\d:\s*"([^"]+)"/)||[])[1]).join('')
+  return {API_KEY,BIN_ID}
+}
+
+const {API_KEY,BIN_ID}=await loadKeys()
+
+
+function renderPosts(){
+  postsEl.innerHTML=''
+  posts.forEach(p=>{
+    const likedCls = liked.has(p.id)?'liked':''
+    postsEl.insertAdjacentHTML('beforeend',`
+      <div class="post">
+        <div class="votes">
+          <button class="vote-btn">▲</button>
+          <div class="score">${p.score||0}</div>
+          <button class="vote-btn">▼</button>
+        </div>
+        <div class="body">
+          <div class="title">${escapeHtml(p.title)}</div>
+          <div class="text">${escapeHtml(p.body)}</div>
+          ${p.image?`<img src="${escapeAttr(p.image)}" style="max-width:100%;border-radius:10px;margin-top:6px">`:""}
+          <div class="meta">
+            <div>${timeAgo(p.ts)}</div>
+            <div class="like-btn ${likedCls}" data-id="${p.id}"><span class="heart">♥</span></div>
+          </div>
+        </div>
+      </div>
+    `)
+  })
 }
 
 /* ---------------------------
-   Composer / Admin FIX
-   --------------------------- */
-function requireAdminPrompt(){
-    
-    // 1. Check if a password exists (if not, prompt to set one)
-    if (!adminPassword) {
-        alert("No Admin password found on JSONBin. You must set one first.");
-        const newPass = prompt("Please set the new Admin password:");
-        if (newPass) {
-            adminPassword = newPass; // Set global state
-            savePosts(); // Save the new password to JSONBin
-            alert("Admin password set and saved to JSONBin! Please log in now.");
-        }
-        return false;
-    }
-
-    // 2. Regular Login Check
-    const pass = prompt('Enter admin password:');
-    if(pass === null) return false;
-
-    if(pass === adminPassword){ // <-- Check against the global state pulled from JSONBin
-        alert("Logged in as admin!");
-        adminLogged = true
-        adminName = 'Admin'
-        updateAdminUI()
-        composerEl.classList.remove('disabled')
-        postTitle.focus()
-        return true
-    } else {
-        alert('Wrong password')
-        return false
-    }
+   Likes handling
+--------------------------- */
+function renderLikedList(){
+  likedListEl.innerHTML=''
+  if(liked.size===0){
+    likedListEl.innerHTML='<div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>'
+  } else {
+    liked.forEach(id=>{
+      const p=posts.find(x=>x.id===id)
+      if(!p) return
+      likedListEl.insertAdjacentHTML('beforeend',`<div class="liked-item"><div class="title">${escapeHtml(p.title)}</div></div>`)
+    })
+  }
+  likedCountEl.textContent = liked.size
 }
-  // KEEP THIS BLOCK:
-adminToggle.addEventListener('click', ()=>{
-    if(adminLogged){
-        // If logged in, prompt to log out
-        if(confirm('Logout admin?')){
-            adminLogged = false
-            updateAdminUI()
-        }
-    } else {
-        // If logged out, prompt to log in
-        requireAdminPrompt() // This now correctly calls the NEW, JSONBin-compatible version
-    }
-});
-  
-submitBtn.addEventListener('click', async ()=>{ // <-- The FIX: 'async' is mandatory here
-  if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
-  const t = postTitle.value.trim()
-  const b = postBody.value.trim()
-  const img = postImage.value.trim()
-  if(!t && !b){ alert('Write a title or body') ; return }
-  const newPost = { id: uid(), title: t || '(no title)', body: b, score: 0, created: Date.now(), img: img }
+
+/* ---------------------------
+   Event delegation
+--------------------------- */
+postsEl.addEventListener('click',e=>{
+  if(e.target.closest('.like-btn')){
+    const btn = e.target.closest('.like-btn')
+    const id = btn.dataset.id
+    if(liked.has(id)) liked.delete(id)
+    else liked.add(id)
+    saveLikedSet(liked)
+    renderPosts()
+    renderLikedList()
+  }
+})
+
+submitBtn.addEventListener('click',()=>{
+  if(!adminLogged) return alert('Only admins can post')
+  const title = postTitle.value.trim()
+  const body = postBody.value.trim()
+  const image = postImage.value.trim()
+  if(!title||!body) return alert('Title and body required')
+  const newPost={id:uid(),title,body,image,score:0,ts:Date.now()}
   posts.unshift(newPost)
-  
-  await savePosts() // This line now runs without error
-  
-  postTitle.value = ''
-  postBody.value = ''
-  postImage.value = ''
-  renderPosts(document.getElementById('searchInput').value)
-  renderLikedList()
-})
-changePassBtn.addEventListener('click', ()=>{
-  if(!adminLogged){
-    alert('Login as admin first')
-    return
-  }
-  
-  const next = prompt('Enter new admin password:')
-  
-  if(next === null || next.trim() === ''){
-    alert('Password change cancelled or new password was empty.')
-    return
-  }
-  
-  // Update global state and save everything to JSONBin
-  adminPassword = next.trim();
-  savePosts(); // Saves the new password to the remote bin
-  
-  alert('Admin password successfully changed and saved to JSONBin.')
+  renderPosts()
+  postTitle.value=''; postBody.value=''; postImage.value=''
 })
 
-logoutBtn.addEventListener('click', ()=>{
-  if(confirm('Logout admin?')){
-    adminLogged = false
-    updateAdminUI()
-  }
+adminToggle.addEventListener('click',()=>{
+  const pass = prompt('Enter admin password')
+  if(pass===adminPassword){ adminLogged=true; composerEl.classList.remove('disabled'); alert('Admin logged in') }
+  else alert('Wrong password')
+})
+
+changePassBtn.addEventListener('click',()=>{
+  if(!adminLogged) return alert('Login first')
+  const newPass = prompt('Enter new admin password')
+  if(newPass) { adminPassword=newPass; alert('Password changed') }
+})
+
+logoutBtn.addEventListener('click',()=>{
+  adminLogged=false
+  composerEl.classList.add('disabled')
+  alert('Admin logged out')
 })
 
 /* ---------------------------
-   Search / Sort / Init
-   --------------------------- */
-document.getElementById('sortSelect').addEventListener('change', ()=> renderPosts(document.getElementById('searchInput').value))
-document.getElementById('searchInput').addEventListener('input', (e)=> renderPosts(e.target.value))
-document.getElementById('newPostBtn').addEventListener('click', ()=> {
-  if(!adminLogged){
-    if(confirm('Only admins can post. Log in as admin now?')){
-      requireAdminPrompt()
-    }
-  } else {
-    document.getElementById('postBody').focus()
-  }
-})
-
-/* ---------------------------
-   Load / Save liked on startup
-   --------------------------- */
-loadPosts()  // async fetch from JSONBin instead of localStorage
+   Initial render
+--------------------------- */
+renderPosts()
 renderLikedList()
+postCountEl.textContent = posts.length
+karmaEl.textContent = posts.reduce((acc,p)=>acc+(p.score||0),0)
+
+})();
 </script>
 </body>
-   
 </html>
