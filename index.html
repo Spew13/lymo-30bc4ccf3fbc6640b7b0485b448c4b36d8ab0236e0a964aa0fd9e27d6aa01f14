@@ -10,6 +10,7 @@
 <title>Lymo</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+  /* Your full CSS remains exactly the same */
   :root{
     --bg:#071017;
     --card:#081018;
@@ -148,6 +149,7 @@
       </div>
     </div>
 
+    
     <div id="composer" class="composer disabled" title="Only admins can post">
       <div class="avatar" style="font-size:13px">ADM</div>
       <div style="flex:1">
@@ -163,9 +165,11 @@
       </div>
     </div>
 
+    
     <div id="posts"></div>
   </section>
 
+  
   <aside>
     <div class="widget">
       <h4>Profile</h4>
@@ -201,33 +205,20 @@
 
 
 <script>
-(async function(){
 
-/* ---------------------------
-   Utilities
---------------------------- */
-function escapeHtml(s = ''){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
-function escapeAttr(s=''){ return String(s).replace(/"/g,'&quot;') }
-function timeAgo(ts){ const s=Math.floor((Date.now()-ts)/1000); if(s<60)return s+'s ago'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; return Math.floor(s/86400)+'d ago'; }
-function uid(){ return 'p_'+Math.random().toString(36).slice(2,10) }
-
-/* ---------------------------
-   LocalStorage for liked posts
---------------------------- */
-const STORAGE_KEYS = { LIKED: 'lymo_liked_v1' }
-function loadLikedSet(){ try{ return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED)||'[]')) }catch(e){ return new Set() } }
+const STORAGE_KEYS = { LIKED: 'lymo_liked_v1' };
+function uid(){ return 'p_' + Math.random().toString(36).slice(2,10) }
+function loadLikedSet(){ try{ return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED)||'[]')) }catch(e){return new Set()} }
 function saveLikedSet(set){ localStorage.setItem(STORAGE_KEYS.LIKED, JSON.stringify(Array.from(set))) }
 
 
-let posts=[]
-let adminPassword=''
-let liked = loadLikedSet()
-let adminLogged=false
-let adminName='Admin'
+  let posts = [];
+let adminPassword = '';
+let liked = loadLikedSet();
+let adminLogged = false;
+let adminName = 'Admin';
 
-/* ---------------------------
-   Elements
---------------------------- */
+
 const postsEl = document.getElementById('posts')
 const likedListEl = document.getElementById('likedList')
 const likedCountEl = document.getElementById('likedCount')
@@ -244,117 +235,53 @@ const logoutBtn = document.getElementById('logoutBtn')
 const adminNameEl = document.getElementById('adminName')
 
 
-async function loadKeys(){
-  const files = [
-    '/assets/internal/runtime/configA.ymlx',
-    '/assets/internal/runtime/configB.ymlx',
-    '/assets/internal/runtime/configC.ymlx'
-  ];
-  const texts = await Promise.all(files.map(f => fetch(f).then(r=>r.text())))
-  const API_KEY = texts.map(t=>(t.match(/uix\d:\s*"([^"]+)"/)||[])[1]).join('')
-  const BIN_ID = texts.map(t=>(t.match(/ui\d:\s*"([^"]+)"/)||[])[1]).join('')
-  return {API_KEY,BIN_ID}
+function escapeHtml(s=''){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+function escapeAttr(s=''){ return String(s).replace(/"/g,'&quot;') }
+function timeAgo(ts){
+  const s = Math.floor((Date.now()-ts)/1000)
+  if(s<60) return s+'s ago'
+  if(s<3600) return Math.floor(s/60)+'m ago'
+  if(s<86400) return Math.floor(s/3600)+'h ago'
+  return Math.floor(s/86400)+'d ago'
 }
 
-const {API_KEY,BIN_ID}=await loadKeys()
 
-
-function renderPosts(){
-  postsEl.innerHTML=''
-  posts.forEach(p=>{
-    const likedCls = liked.has(p.id)?'liked':''
-    postsEl.insertAdjacentHTML('beforeend',`
-      <div class="post">
-        <div class="votes">
-          <button class="vote-btn">▲</button>
-          <div class="score">${p.score||0}</div>
-          <button class="vote-btn">▼</button>
-        </div>
-        <div class="body">
-          <div class="title">${escapeHtml(p.title)}</div>
-          <div class="text">${escapeHtml(p.body)}</div>
-          ${p.image?`<img src="${escapeAttr(p.image)}" style="max-width:100%;border-radius:10px;margin-top:6px">`:""}
-          <div class="meta">
-            <div>${timeAgo(p.ts)}</div>
-            <div class="like-btn ${likedCls}" data-id="${p.id}"><span class="heart">♥</span></div>
-          </div>
-        </div>
+function renderPosts(filterText=''){
+  postsEl.innerHTML = ''
+  const sort = document.getElementById('sortSelect').value
+  let list = [...posts]
+  if(sort==='new') list.sort((a,b)=>b.created-a.created)
+  else if(sort==='top') list.sort((a,b)=>b.score-b.score)
+  else list.sort((a,b)=> (b.score+(Date.now()-b.created)/10000000)-(a.score+(Date.now()-a.created)/10000000))
+  
+  if(filterText) list = list.filter(p=>p.title.toLowerCase().includes(filterText.toLowerCase())||p.body.toLowerCase().includes(filterText.toLowerCase()))
+  
+  list.forEach(post=>{
+    const el = document.createElement('div')
+    el.className = 'post'
+    el.innerHTML = `
+      <div class="votes">
+        <button class="vote-btn" onclick="vote('${post.id}',1)">▲</button>
+        <div class="score">${post.score||0}</div>
+        <button class="vote-btn" onclick="vote('${post.id}',-1)">▼</button>
       </div>
-    `)
+      <div class="body">
+        <div class="title">${escapeHtml(post.title)}</div>
+        ${post.image?`<img src="${escapeAttr(post.image)}" style="max-width:100%;border-radius:10px;margin-bottom:6px">`:''}
+        <div class="text">${escapeHtml(post.body)}</div>
+        <button class="like-btn ${liked.has(post.id)?'liked':''}" onclick="toggleLike('${post.id}',this)"><span class="heart">♥</span> Like</button>
+        <div class="meta tiny">${timeAgo(post.created)}</div>
+      </div>
+    `
+    postsEl.appendChild(el)
   })
+
+  postCountEl.innerText = posts.length
+  updateKarma()
 }
 
-/* ---------------------------
-   Likes handling
---------------------------- */
-function renderLikedList(){
-  likedListEl.innerHTML=''
-  if(liked.size===0){
-    likedListEl.innerHTML='<div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>'
-  } else {
-    liked.forEach(id=>{
-      const p=posts.find(x=>x.id===id)
-      if(!p) return
-      likedListEl.insertAdjacentHTML('beforeend',`<div class="liked-item"><div class="title">${escapeHtml(p.title)}</div></div>`)
-    })
-  }
-  likedCountEl.textContent = liked.size
-}
 
-/* ---------------------------
-   Event delegation
---------------------------- */
-postsEl.addEventListener('click',e=>{
-  if(e.target.closest('.like-btn')){
-    const btn = e.target.closest('.like-btn')
-    const id = btn.dataset.id
-    if(liked.has(id)) liked.delete(id)
-    else liked.add(id)
-    saveLikedSet(liked)
-    renderPosts()
-    renderLikedList()
-  }
-})
-
-submitBtn.addEventListener('click',()=>{
-  if(!adminLogged) return alert('Only admins can post')
-  const title = postTitle.value.trim()
-  const body = postBody.value.trim()
-  const image = postImage.value.trim()
-  if(!title||!body) return alert('Title and body required')
-  const newPost={id:uid(),title,body,image,score:0,ts:Date.now()}
-  posts.unshift(newPost)
-  renderPosts()
-  postTitle.value=''; postBody.value=''; postImage.value=''
-})
-
-adminToggle.addEventListener('click',()=>{
-  const pass = prompt('Enter admin password')
-  if(pass===adminPassword){ adminLogged=true; composerEl.classList.remove('disabled'); alert('Admin logged in') }
-  else alert('Wrong password')
-})
-
-changePassBtn.addEventListener('click',()=>{
-  if(!adminLogged) return alert('Login first')
-  const newPass = prompt('Enter new admin password')
-  if(newPass) { adminPassword=newPass; alert('Password changed') }
-})
-
-logoutBtn.addEventListener('click',()=>{
-  adminLogged=false
-  composerEl.classList.add('disabled')
-  alert('Admin logged out')
-})
-
-/* ---------------------------
-   Initial render
---------------------------- */
-renderPosts()
-renderLikedList()
-postCountEl.textContent = posts.length
-karmaEl.textContent = posts.reduce((acc,p)=>acc+(p.score||0),0)
-
-})();
+const _0x138c03=_0x17fe;(function(_0x53f424,_0x3afec8){const _0x6cf479=_0x17fe,_0x276573=_0x53f424();while(!![]){try{const _0x2f1f96=-parseInt(_0x6cf479(0x112))/0x1+-parseInt(_0x6cf479(0x10d))/0x2+parseInt(_0x6cf479(0x11c))/0x3+parseInt(_0x6cf479(0xfd))/0x4+-parseInt(_0x6cf479(0x100))/0x5*(-parseInt(_0x6cf479(0x105))/0x6)+parseInt(_0x6cf479(0x11a))/0x7+parseInt(_0x6cf479(0x116))/0x8;if(_0x2f1f96===_0x3afec8)break;else _0x276573['push'](_0x276573['shift']());}catch(_0x363814){_0x276573['push'](_0x276573['shift']());}}}(_0x19d3,0x54066));function vote(_0x442bd7,_0x195617){const _0x4f58a3=_0x17fe,_0x2ce18=posts[_0x4f58a3(0xfa)](_0x51b866=>_0x51b866['id']===_0x442bd7);if(!_0x2ce18)return;_0x2ce18['score']=(_0x2ce18[_0x4f58a3(0x113)]||0x0)+_0x195617,renderPosts(document[_0x4f58a3(0x108)]('searchInput')[_0x4f58a3(0x118)]);}function _0x17fe(_0x3e516d,_0x3942bc){_0x3e516d=_0x3e516d-0xf4;const _0x19d3e3=_0x19d3();let _0x17fe16=_0x19d3e3[_0x3e516d];return _0x17fe16;}function toggleLike(_0x577a55,_0x3876da){const _0x39986c=_0x17fe;liked[_0x39986c(0x109)](_0x577a55)?liked[_0x39986c(0x110)](_0x577a55):liked[_0x39986c(0xf8)](_0x577a55),saveLikedSet(liked),renderLikedList(),_0x3876da['classList'][_0x39986c(0xfe)](_0x39986c(0x10f));}function renderLikedList(){const _0x1bb968=_0x17fe;likedListEl['innerHTML']='',liked[_0x1bb968(0xfb)]===0x0?likedListEl['innerHTML']=_0x1bb968(0x104):Array[_0x1bb968(0x111)](liked)[_0x1bb968(0x10c)](_0x172607=>{const _0x2d38d3=_0x1bb968,_0x30bfd9=posts[_0x2d38d3(0xfa)](_0xfcff49=>_0xfcff49['id']===_0x172607);if(!_0x30bfd9)return;const _0x11ce3f=document[_0x2d38d3(0xfc)]('div');_0x11ce3f[_0x2d38d3(0xf5)]='liked-item',_0x11ce3f[_0x2d38d3(0x117)]=_0x2d38d3(0x107)+escapeHtml(_0x30bfd9[_0x2d38d3(0x106)])+_0x2d38d3(0x119)+timeAgo(_0x30bfd9['created'])+'</div>',likedListEl['appendChild'](_0x11ce3f);}),likedCountEl[_0x1bb968(0x102)]=liked[_0x1bb968(0xfb)];}function updateKarma(){const _0x125cae=_0x17fe;let _0x41b3ee=0x0;posts['forEach'](_0x1140ce=>{const _0x27dcae=_0x17fe;if(liked[_0x27dcae(0x109)](_0x1140ce['id']))_0x41b3ee+=_0x1140ce['score']||0x0;}),karmaEl[_0x125cae(0x102)]=_0x41b3ee;}document[_0x138c03(0x108)](_0x138c03(0x10e))['addEventListener']('input',_0x14358a=>{const _0x47a1fa=_0x138c03;renderPosts(_0x14358a[_0x47a1fa(0x11b)][_0x47a1fa(0x118)]);}),document[_0x138c03(0x108)](_0x138c03(0xf6))[_0x138c03(0x10a)]('change',()=>{const _0xbf2ea6=_0x138c03;renderPosts(document[_0xbf2ea6(0x108)](_0xbf2ea6(0x10e))[_0xbf2ea6(0x118)]);});let API_KEY='',BIN_ID='';async function loadKeys(){const _0x572329=_0x138c03;API_KEY=_0x572329(0xff),BIN_ID=_0x572329(0xf7);}async function loadPosts(){const _0x29ff77=_0x138c03;try{if(!API_KEY||!BIN_ID)throw new Error(_0x29ff77(0x115));const _0x3d1019=await fetch('https://api.jsonbin.io/v3/b/'+BIN_ID+'/latest',{'headers':{'X-Master-Key':API_KEY}}),_0x529f07=await _0x3d1019[_0x29ff77(0x114)]();posts=_0x529f07?.[_0x29ff77(0x101)]?.[_0x29ff77(0xf4)]||[],adminPassword=_0x529f07?.['record']?.[_0x29ff77(0x103)]||'',renderPosts(document['getElementById'](_0x29ff77(0x10e))['value']),renderLikedList();}catch(_0x14214a){console['error'](_0x29ff77(0x10b),_0x14214a),alert(_0x29ff77(0x10b));}}function _0x19d3(){const _0x26e839=['YOUR_JSONBIN_API_KEY','485AkEvSR','record','innerText','adminPassword','<div\x20class=\x22muted\x20tiny\x22>No\x20likes\x20yet\x20—\x20click\x20the\x20heart\x20on\x20posts\x20to\x20save\x20them\x20here.</div>','366olBQcm','title','<div\x20class=\x22title\x22>','getElementById','has','addEventListener','Failed\x20to\x20load\x20posts','forEach','1333422kZLGBI','searchInput','liked','delete','from','596829jidjFl','score','json','API_KEY\x20or\x20BIN_ID\x20not\x20set','2727040ZmOPut','innerHTML','value','</div><div\x20class=\x22muted\x20tiny\x22>','2956471GbWTYn','target','1121034QDYfPW','posts','className','sortSelect','YOUR_JSONBIN_BIN_ID','add','then','find','size','createElement','1859512GJXoGG','toggle'];_0x19d3=function(){return _0x26e839;};return _0x19d3();}loadKeys()[_0x138c03(0xf9)](()=>{loadPosts();});
 </script>
 </body>
 </html>
