@@ -1,8 +1,0 @@
-# Runtime Config A
-system:
-  cache: true
-  version: 1.2
-
-credentials:
-  uix1: "$2a$10$SjcbvSnj"
-  ui1: "6913350c"
