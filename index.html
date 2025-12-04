@@ -218,9 +218,9 @@ function uid(){ return 'p_' + Math.random().toString(36).slice(2,10) }
 
 async function loadKeys() {
   const files = [
-    '/internal/runtime/configA.ymlx',
-    '/internal/runtime/configB.ymlx',
-    '/internal/runtime/configC.ymlx'
+    '/assets/internal/runtime/configA.ymlx',
+    '/assets/internal/runtime/configB.ymlx',
+    '/assets/internal/runtime/configC.ymlx'
   ];
 
   const texts = await Promise.all(files.map(f => fetch(f).then(r => r.text())));
