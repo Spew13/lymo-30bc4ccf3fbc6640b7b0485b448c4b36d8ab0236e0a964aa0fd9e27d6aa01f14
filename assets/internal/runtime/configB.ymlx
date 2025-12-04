@@ -1,0 +1,8 @@
+# Runtime Config B
+logging:
+  level: warn
+  rotate: true
+
+credentials:
+  uix2: "iyFfuDwOzew2b.Ctow"
+  ui2: "ae596e70"
