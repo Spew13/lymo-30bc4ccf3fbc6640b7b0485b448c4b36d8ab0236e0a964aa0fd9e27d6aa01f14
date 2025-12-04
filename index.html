@@ -573,35 +573,5 @@ loadPosts()  // async fetch from JSONBin instead of localStorage
 renderLikedList()
 </script>
 </body>
-    <script>
-(function() {
-    const allowedHost = "https://spew13.github.io/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14/";
-    if (location.protocol === "file:" || location.hostname !== allowedHost) {
-        document.documentElement.innerHTML = `
-            <style>
-                body {
-                    background: #1b0000;
-                    color: #ff4444;
-                    font-family: Arial, sans-serif;
-                    text-align: center;
-                    padding-top: 100px;
-                }
-                .err {
-                    font-size: 40px;
-                    font-weight: bold;
-                }
-                .sub {
-                    font-size: 20px;
-                    margin-top: 20px;
-                    opacity: 0.8;
-                }
-            </style>
-            <div class="err">ERROR 67 :) — Unauthorized Copy</div>
-            <div class="sub">This site cannot run offline or from a saved file.<br>
-            Load it at <b>https://spew13.github.io/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14/</b></div>
-        `;
-        throw new Error("Unauthorized offline/local execution blocked.");
-    }
-})();
-</script>
+   
 </html>
