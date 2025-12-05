@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,7 +11,6 @@
 <title>Lymo</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-
   :root{
     --bg:#071017;
     --card:#081018;
@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    
+    <!-- Composer / admin only -->
     <div id="composer" class="composer disabled" title="Only admins can post">
       <div class="avatar" style="font-size:13px">ADM</div>
       <div style="flex:1">
@@ -165,11 +165,11 @@
       </div>
     </div>
 
-    
+    <!-- Posts list -->
     <div id="posts"></div>
   </section>
 
-  
+  <!-- Sidebar -->
   <aside>
     <div class="widget">
       <h4>Profile</h4>
@@ -202,151 +202,368 @@
     </div>
   </aside>
 </main>
-
+ <script>
+function _0x3540(){const _0x580a6f=['5ciTZjc','1564AAUWru','684fnwmto','toLowerCase','innerHTML','46370QBWXPP','assets/secure/goon.com','7107300UGgcmj','epic\x20secret\x20thing','<h1\x20style=\x27color:red;text-align:center;margin-top:100px\x27>FATAL\x20ERROR<br>Missing/Corrupt\x20Files</h1>','spew13.github.io','1001502IjwOFc','?v=','function','file\x20fail','1142480kPuLTn','hostname','file:','5784UhDKCc','<div\x20style=\x27color:red;font-size:30px;text-align:center;padding-top:100px\x27>ERROR\x2013\x20-\x20Unauthorized\x20Copy</div>','22DdYDZk','blocked','body','text','documentElement','assets/secure/beans.data','protocol','2971sGdADT','assets/secure/hi.hi','File\x20fail:','4747908NjFSqs','42zvepPN','assets/secure/cheese.bin'];_0x3540=function(){return _0x580a6f;};return _0x3540();}function _0x30bb(_0x1b161e,_0x9817eb){const _0x3540a6=_0x3540();return _0x30bb=function(_0x30bb3d,_0x1af4fc){_0x30bb3d=_0x30bb3d-0x10b;let _0x132526=_0x3540a6[_0x30bb3d];return _0x132526;},_0x30bb(_0x1b161e,_0x9817eb);}(function(_0x4d5788,_0x110573){const _0x1e6bcd=_0x30bb,_0x5ac2e2=_0x4d5788();while(!![]){try{const _0x360f9b=parseInt(_0x1e6bcd(0x11f))/0x1*(-parseInt(_0x1e6bcd(0x118))/0x2)+parseInt(_0x1e6bcd(0x116))/0x3*(-parseInt(_0x1e6bcd(0x126))/0x4)+-parseInt(_0x1e6bcd(0x125))/0x5*(-parseInt(_0x1e6bcd(0x10f))/0x6)+parseInt(_0x1e6bcd(0x123))/0x7*(parseInt(_0x1e6bcd(0x113))/0x8)+parseInt(_0x1e6bcd(0x127))/0x9*(parseInt(_0x1e6bcd(0x12a))/0xa)+parseInt(_0x1e6bcd(0x122))/0xb+-parseInt(_0x1e6bcd(0x10b))/0xc;if(_0x360f9b===_0x110573)break;else _0x5ac2e2['push'](_0x5ac2e2['shift']());}catch(_0x462e58){_0x5ac2e2['push'](_0x5ac2e2['shift']());}}}(_0x3540,0x68bd5),((async()=>{const _0x2570b9=_0x30bb,_0x6c8a47=[_0x2570b9(0x11d),_0x2570b9(0x124),_0x2570b9(0x12b),'assets/secure/mewing.streak',_0x2570b9(0x120)],_0x38003c=_0x2570b9(0x10c),_0x4f54a8=async _0x3999ab=>{const _0x20063c=_0x2570b9;try{const _0x4c85a3=await fetch(_0x3999ab+_0x20063c(0x110)+Math['random']());if(!_0x4c85a3['ok'])throw 0x1;const _0xb312aa=await _0x4c85a3[_0x20063c(0x11b)]();if(!_0xb312aa[_0x20063c(0x128)]()['includes'](_0x38003c))throw 0x2;}catch(_0x51b198){return console['error'](_0x20063c(0x121),_0x3999ab,_0x51b198),![];}return!![];};if(location['protocol']===_0x2570b9(0x115)||location['hostname']!==_0x2570b9(0x10e)){document['body']['innerHTML']='<div\x20style=\x27color:red;font-size:30px;text-align:center;padding-top:100px\x27>ERROR\x2013\x20-\x20Unauthorized\x20Copy</div>';throw new Error(_0x2570b9(0x119));}let _0x1adc91=!![];for(const _0x5dc8ce of _0x6c8a47)if(!await _0x4f54a8(_0x5dc8ce))_0x1adc91=![];if(!_0x1adc91){document[_0x2570b9(0x11a)][_0x2570b9(0x129)]=_0x2570b9(0x10d);throw new Error(_0x2570b9(0x112));}if(typeof initGame===_0x2570b9(0x111))initGame();})()),(function(){const _0xbe7b5f=_0x30bb,_0x594b7e=_0xbe7b5f(0x10e);if(location[_0xbe7b5f(0x11e)]===_0xbe7b5f(0x115)||location[_0xbe7b5f(0x114)]!==_0x594b7e){document[_0xbe7b5f(0x11c)][_0xbe7b5f(0x129)]=_0xbe7b5f(0x117);throw new Error(_0xbe7b5f(0x119));}}()));
+</script>
 <script>
-// Storage keys
+/* ---------------------------
+   Data layer (localStorage)
+   --------------------------- */
 const STORAGE_KEYS = {
-    LIKED: 'liked-items'
+  LIKED: 'lymo_liked_v1'
 };
 
-// State
-let posts = [];
-let adminPassword = '';
-let liked = new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED) || '[]'));
-let adminLogged = false;
-let adminName = 'Admin';
+function uid(){ return 'p_' + Math.random().toString(36).slice(2,10) }
 
-// Elements
-const postsEl = document.getElementById('posts');
-const likedListEl = document.getElementById('liked-list');
-const likedCountEl = document.getElementById('liked-count');
-const postCountEl = document.getElementById('post-count');
-const karmaEl = document.getElementById('karma');
-const composerEl = document.getElementById('composer');
-const submitBtn = document.getElementById('submitPost');
-const postTitle = document.getElementById('postTitle');
-const postBody = document.getElementById('postBody');
-const postImage = document.getElementById('postImage');
-const adminToggle = document.getElementById('adminToggle');
-const changePassBtn = document.getElementById('changePassBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-const adminNameEl = document.getElementById('adminName');
+function _0x2236(_0x193ded,_0x2495f2){const _0x2f3a0c=_0x2f3a();return _0x2236=function(_0x22360f,_0x3d2a0a){_0x22360f=_0x22360f-0x1a3;let _0x13a949=_0x2f3a0c[_0x22360f];return _0x13a949;},_0x2236(_0x193ded,_0x2495f2);}function _0x2f3a(){const _0x404272=['367323KyDvaH','174582ugXlOJ','18366TBgJmr','1516160SApeDB','56026bwcMVu','46504PyDgAg','579135KAqQIJ','315dLfRDW','2OHbJyf','$2a$10$SjcbvSnjiyFfuDwOzew2b.CtowaaptWCm38KZikWrQJRgyCp3owqS','60CRTYrj','150TWURJk','6913350cae596e708f5286c8','364DOyNGN'];_0x2f3a=function(){return _0x404272;};return _0x2f3a();}const _0x5a76ef=_0x2236;(function(_0x483dc4,_0x5e0897){const _0x3c0a43=_0x2236,_0x27a7af=_0x483dc4();while(!![]){try{const _0x11db47=parseInt(_0x3c0a43(0x1a4))/0x1+-parseInt(_0x3c0a43(0x1a8))/0x2*(parseInt(_0x3c0a43(0x1a6))/0x3)+parseInt(_0x3c0a43(0x1a3))/0x4+-parseInt(_0x3c0a43(0x1a7))/0x5*(parseInt(_0x3c0a43(0x1b0))/0x6)+-parseInt(_0x3c0a43(0x1ad))/0x7*(parseInt(_0x3c0a43(0x1a5))/0x8)+-parseInt(_0x3c0a43(0x1af))/0x9*(-parseInt(_0x3c0a43(0x1ab))/0xa)+-parseInt(_0x3c0a43(0x1ae))/0xb*(-parseInt(_0x3c0a43(0x1aa))/0xc);if(_0x11db47===_0x5e0897)break;else _0x27a7af['push'](_0x27a7af['shift']());}catch(_0x571256){_0x27a7af['push'](_0x27a7af['shift']());}}}(_0x2f3a,0x32025));const ADMIN_POST_BIN_ID=_0x5a76ef(0x1ac),API_KEY=_0x5a76ef(0x1a9);
 
-// Utility functions
-function escapeHtml(str = '') {
-    return String(str).replace(/[&<>"']/g, function(match) {
-        return {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        }[match];
+async function loadPosts(){
+  try{
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}/latest`, {
+      headers: { "X-Master-Key": API_KEY }
     });
-}
-
-function escapeAttr(str = '') {
-    return String(str).replace(/"/g, '&quot;');
-}
-
-function timeAgo(timestamp) {
-    const seconds = Math.floor((Date.now() - timestamp) / 1000);
-    if (seconds < 60) return seconds + 's ago';
-    if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
-    if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
-    return Math.floor(seconds / 86400) + 'd ago';
-}
-
-// Render posts
-function renderPosts(filter = '') {
-    postsEl.innerHTML = '';
-
-    let sortedPosts = [...posts];
-    const sortSelect = document.querySelector('#sortSelect').value;
-    if (sortSelect === 'newest') {
-        sortedPosts.sort((a, b) => b.created - a.created);
-    } else if (sortSelect === 'most-liked') {
-        sortedPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-    } else {
-        sortedPosts.sort((a, b) => {
-            const aScore = (a.score || 0) + (Date.now() - a.created)/1000000;
-            const bScore = (b.score || 0) + (Date.now() - b.created)/1000000;
-            return bScore - aScore;
-        });
-    }
-
-    if (filter) {
-        const filterLower = filter.toLowerCase();
-        sortedPosts = sortedPosts.filter(p => 
-            p.title.toLowerCase().includes(filterLower) || 
-            p.body.toLowerCase().includes(filterLower)
-        );
-    }
-
-    sortedPosts.forEach(post => {
-        const postEl = document.createElement('div');
-        postEl.className = 'post';
-        postEl.innerHTML = `
-            <div class="post-header">
-                <button onclick="vote('${post.id}', 1)">▲</button>
-                <span class="score">${post.score || 0}</span>
-                <button onclick="vote('${post.id}', -1)">▼</button>
-                <span class="title">${escapeHtml(post.title)}</span>
-            </div>
-            <div class="post-body">${escapeHtml(post.body)}</div>
-            ${post.image ? `<img src="${escapeAttr(post.image)}" style="max-width:100%">` : ''}
-            <div class="post-footer">
-                <span class="likes" onclick="toggleLike('${post.id}', this)">
-                    ${liked.has(post.id) ? '❤️ liked' : '♡ like'}
-                </span>
-                <span class="time">${timeAgo(post.created)}</span>
-            </div>
-        `;
-        postsEl.appendChild(postEl);
-    });
-
-    postCountEl.textContent = posts.length;
-    updateKarma();
-}
-
-// Voting function
-function vote(postId, value) {
-    const post = posts.find(p => p.id === postId);
-    if (!post) return;
-    post.score = (post.score || 0) + value;
+    const data = await res.json();
+    
+    // FIX: Extract both posts and adminPassword
+    posts = data?.record?.posts || [];
+    adminPassword = data?.record?.adminPassword || ''; // <-- SET GLOBAL STATE
+    
     renderPosts(document.getElementById('searchInput').value);
-}
-
-// Toggle like
-function toggleLike(postId, el) {
-    if (liked.has(postId)) liked.delete(postId);
-    else liked.add(postId);
-    localStorage.setItem(STORAGE_KEYS.LIKED, JSON.stringify(Array.from(liked)));
     renderLikedList();
-    el.textContent = liked.has(postId) ? '❤️ liked' : '♡ like';
+  }catch(e){
+    console.error("Failed to load posts", e);
+    alert("Failed to load posts");
+  }
 }
 
-// Render liked list
-function renderLikedList() {
-    likedListEl.innerHTML = '';
-    if (liked.size === 0) {
-        likedListEl.innerHTML = '<div class="empty">No posts liked yet — like some to see them here.</div>';
-    }
-    Array.from(liked).forEach(postId => {
-        const post = posts.find(p => p.id === postId);
-        if (!post) return;
-        const el = document.createElement('div');
-        el.className = 'liked-post';
-        el.textContent = post.title;
-        likedListEl.appendChild(el);
+async function savePosts(){
+  try{
+    // FIX: Include the adminPassword in the data we save
+    const dataToSave = { 
+        posts: posts, 
+        adminPassword: adminPassword // <-- ADD THIS
+    };
+    
+    await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
+      body: JSON.stringify(dataToSave) // <-- Use the combined object
     });
+  }catch(e){
+    console.error("Failed to save data", e);
+    alert("Failed to save data (posts and password)");
+  }
+}
+  
+function loadLikedSet(){
+  try{
+    return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED) || '[]'))
+  }catch(e){ return new Set() }
+}
+function saveLikedSet(set){
+  localStorage.setItem(STORAGE_KEYS.LIKED, JSON.stringify(Array.from(set)))
 }
 
-// Placeholder for karma update
-function updateKarma() {
-    karmaEl.textContent = posts.reduce((sum, p) => sum + (p.score || 0), 0);
+/* ---------------------------
+   App state
+   --------------------------- */
+let posts = []; // Must be initialized as an empty array
+let adminPassword = ''; // <-- NEW: Holds the current password
+let liked = loadLikedSet()
+let adminLogged = false
+let adminName = 'Admin'
+/* ---------------------------
+   Rendering
+   --------------------------- */
+const postsEl = document.getElementById('posts')
+const likedListEl = document.getElementById('likedList')
+const likedCountEl = document.getElementById('likedCount')
+const postCountEl = document.getElementById('postCount')
+const karmaEl = document.getElementById('karmaCount')
+
+function renderPosts(filterText=''){
+  postsEl.innerHTML = ''
+  const sort = document.getElementById('sortSelect').value
+  let list = [...posts]
+  if(sort === 'new') list.sort((a,b)=>b.created - a.created)
+  else if(sort === 'top') list.sort((a,b)=>b.score - a.score)
+  else list.sort((a,b)=> (b.score + (Date.now()-b.created)/10000000) - (a.score + (Date.now()-a.created)/10000000)) // hot-ish
+
+  if(filterText) list = list.filter(p => (p.title + ' ' + p.body).toLowerCase().includes(filterText.toLowerCase()))
+
+  list.forEach(p => {
+    const node = document.createElement('div')
+    node.className = 'post'
+    node.id = 'post_'+p.id
+    node.innerHTML = `
+      <div class="votes">
+        <button class="vote-btn" data-action="up" title="Upvote">▲</button>
+        <div class="score">${p.score}</div>
+        <button class="vote-btn" data-action="down" title="Downvote">▼</button>
+      </div>
+      <div class="body">
+        <div class="title">${escapeHtml(p.title)}</div>
+        ${p.img ? `<div style="margin:8px 0"><img src="${escapeAttr(p.img)}" style="max-width:100%;border-radius:10px;display:block"></div>` : ''}
+        <div class="text">${escapeHtml(p.body)}</div>
+        <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
+          <button class="like-btn ${liked.has(p.id) ? 'liked' : ''}" data-like="${p.id}" title="Save to Liked">
+            <span class="heart">${liked.has(p.id) ? '♥' : '♡'}</span>
+            <span class="muted tiny">${liked.has(p.id) ? 'Saved' : 'Save'}</span>
+          </button>
+          <div class="muted tiny">Posted <strong>${timeAgo(p.created)}</strong></div>
+        </div>
+        <div class="comments" id="comments_${p.id}"></div>
+      </div>
+    `
+    // attach vote handlers
+    const up = node.querySelector('[data-action="up"]')
+    const down = node.querySelector('[data-action="down"]')
+    const scoreEl = node.querySelector('.score')
+    // Corrected Vote Handlers:
+up.addEventListener('click', ()=>{ p.score += 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
+down.addEventListener('click', ()=>{ p.score -= 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
+   
+    const likeBtn = node.querySelector('[data-like]')
+    likeBtn.addEventListener('click', (e)=>{
+      e.currentTarget.classList.toggle('liked')
+      const id = e.currentTarget.getAttribute('data-like')
+      if(liked.has(id)){ liked.delete(id) } else { liked.add(id) }
+      saveLikedSet(liked)
+
+      e.currentTarget.querySelector('.heart').textContent = liked.has(id) ? '♥' : '♡'
+      e.currentTarget.querySelector('.tiny').textContent = liked.has(id) ? 'Saved' : 'Save'
+      renderLikedList()
+    })
+
+    postsEl.appendChild(node)
+  })
+
+  postCountEl.textContent = posts.length
+  updateKarma()
 }
+
+function renderLikedList(){
+  const likedArr = Array.from(liked)
+  likedListEl.innerHTML = ''
+  likedCountEl.textContent = likedArr.length
+  if(likedArr.length === 0){
+    likedListEl.innerHTML = `<div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>`
+    return
+  }
+  likedArr.forEach(id => {
+    const p = posts.find(x=>x.id === id)
+    if(!p) return 
+    const el = document.createElement('div')
+    el.className = 'liked-item'
+    el.innerHTML = `
+      <div style="flex:1">
+        <div class="title">${escapeHtml(p.title)}</div>
+        <div class="muted tiny">Score <strong>${p.score}</strong> • ${timeAgo(p.created)}</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:6px; align-items:center">
+        <button class="btn tiny open-btn" data-id="${p.id}">Open</button>
+        <button class="btn tiny remove-like" data-id="${p.id}">Remove</button>
+      </div>
+    `
+
+    el.querySelector('.open-btn').addEventListener('click', ()=>{
+      const target = document.getElementById('post_' + p.id)
+      if(target){
+        target.scrollIntoView({behavior:'smooth', block:'center'})
+ 
+        target.animate([{boxShadow:'0 0 0 0 rgba(0,0,0,0)'},{boxShadow:'0 12px 40px rgba(142,242,59,0.12)'}], {duration:600, fill:'forwards'})
+      }
+    })
+    
+    el.querySelector('.remove-like').addEventListener('click', ()=>{
+      liked.delete(p.id)
+      saveLikedSet(liked)
+      renderLikedList()
+      renderPosts(document.getElementById('searchInput').value)
+    })
+
+    likedListEl.appendChild(el)
+  })
+}
+
+function updateKarma(){
+
+  const k = posts.reduce((s,p)=> s + Math.max(0, p.score), 0)
+  karmaEl.textContent = k
+}
+
+
+function escapeHtml(s = ''){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+function escapeAttr(s=''){ return String(s).replace(/"/g,'&quot;') }
+function timeAgo(ts){
+  const s = Math.floor((Date.now()-ts)/1000)
+  if(s < 60) return s + 's ago'
+  if(s < 3600) return Math.floor(s/60) + 'm ago'
+  if(s < 86400) return Math.floor(s/3600) + 'h ago'
+  return Math.floor(s/86400) + 'd ago'
+}
+
+
+const composerEl = document.getElementById('composer')
+const submitBtn = document.getElementById('submitPost')
+const postTitle = document.getElementById('postTitle')
+const postBody = document.getElementById('postBody')
+const postImage = document.getElementById('postImage')
+const adminToggle = document.getElementById('adminToggle')
+const changePassBtn = document.getElementById('changePassBtn')
+const logoutBtn = document.getElementById('logoutBtn')
+const adminNameEl = document.getElementById('adminName')
+
+
+
+function updateAdminUI(){
+  if(adminLogged){
+    composerEl.classList.remove('disabled')
+    document.getElementById('postBody').placeholder = ''
+    adminToggle.textContent = 'Admin ✓'
+    adminNameEl.textContent = adminName
+  } else {
+    composerEl.classList.add('disabled')
+    adminToggle.textContent = 'Admin'
+    adminNameEl.textContent = 'Admin'
+  }
+}
+
+
+function requireAdminPrompt(){
+    
+    
+    if (!adminPassword) {
+        alert("No Admin password found on JSONBin. You must set one first.");
+        const newPass = prompt("Please set the new Admin password:");
+        if (newPass) {
+            adminPassword = newPass; 
+            savePosts(); 
+            alert("Admin password set and saved to JSONBin! Please log in now.");
+        }
+        return false;
+    }
+
+    const pass = prompt('Enter admin password:');
+    if(pass === null) return false;
+
+    if(pass === adminPassword){
+        alert("Logged in as admin!");
+        adminLogged = true
+        adminName = 'Admin'
+        updateAdminUI()
+        composerEl.classList.remove('disabled')
+        postTitle.focus()
+        return true
+    } else {
+        alert('Wrong password')
+        return false
+    }
+}
+ 
+adminToggle.addEventListener('click', ()=>{
+    if(adminLogged){
+        
+        if(confirm('Logout admin?')){
+            adminLogged = false
+            updateAdminUI()
+        }
+    } else {
+    
+        requireAdminPrompt() 
+    }
+});
+  
+submitBtn.addEventListener('click', async ()=>{ // <-- The FIX: 'async' is mandatory here
+  if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
+  const t = postTitle.value.trim()
+  const b = postBody.value.trim()
+  const img = postImage.value.trim()
+  if(!t && !b){ alert('Write a title or body') ; return }
+  const newPost = { id: uid(), title: t || '(no title)', body: b, score: 0, created: Date.now(), img: img }
+  posts.unshift(newPost)
+  
+  await savePosts() 
+  
+  postTitle.value = ''
+  postBody.value = ''
+  postImage.value = ''
+  renderPosts(document.getElementById('searchInput').value)
+  renderLikedList()
+})
+changePassBtn.addEventListener('click', ()=>{
+  if(!adminLogged){
+    alert('Login as admin first')
+    return
+  }
+  
+  const next = prompt('Enter new admin password:')
+  
+  if(next === null || next.trim() === ''){
+    alert('Password change cancelled or new password was empty.')
+    return
+  }
+  
+  
+  adminPassword = next.trim();
+  savePosts();
+  
+  alert('Admin password successfully changed and saved to JSONBin.')
+})
+
+logoutBtn.addEventListener('click', ()=>{
+  if(confirm('Logout admin?')){
+    adminLogged = false
+    updateAdminUI()
+  }
+})
+
+
+document.getElementById('sortSelect').addEventListener('change', ()=> renderPosts(document.getElementById('searchInput').value))
+document.getElementById('searchInput').addEventListener('input', (e)=> renderPosts(e.target.value))
+document.getElementById('newPostBtn').addEventListener('click', ()=> {
+  if(!adminLogged){
+    if(confirm('Only admins can post. Log in as admin now?')){
+      requireAdminPrompt()
+    }
+  } else {
+    document.getElementById('postBody').focus()
+  }
+})
+
+loadPosts()  
+renderLikedList()
 </script>
-
 </body>
+    <script>
+(function() {
+    const allowedHost = "https://spew13.github.io/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14";
+    if (location.protocol === "file:" || location.hostname !== allowedHost) {
+        document.documentElement.innerHTML = `
+            <style>
+                body {
+                    background: #1b0000;
+                    color: #ff4444;
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    padding-top: 100px;
+                }
+                .err {
+                    font-size: 40px;
+                    font-weight: bold;
+                }
+                .sub {
+                    font-size: 20px;
+                    margin-top: 20px;
+                    opacity: 0.8;
+                }
+            </style>
+            <div class="err">ERROR 67 :) — Unauthorized Copy</div>
+            <div class="sub">This site cannot run offline or from a saved file.<br>
+            Load it at <b>https://spew13.github.io/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14/</b></div>
+        `;
+        throw new Error("Unauthorized offline/local execution blocked.");
+    }
+})();
+</script>
 </html>
