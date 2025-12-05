@@ -537,8 +537,14 @@ renderLikedList()
 </body>
     <script>
 (function() {
-    const allowedHost = "https://spew13.github.io";
-    if (location.protocol === "file:" || location.hostname !== allowedHost) {
+    const allowedHost = "spew13.github.io";
+    const allowedPath = "/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14/";
+
+    if (
+        location.protocol === "file:" || 
+        location.hostname !== allowedHost ||
+        !location.pathname.startsWith(allowedPath)
+    ) {
         document.documentElement.innerHTML = `
             <style>
                 body {
@@ -565,5 +571,6 @@ renderLikedList()
         throw new Error("Unauthorized offline/local execution blocked.");
     }
 })();
+
 </script>
 </html>
