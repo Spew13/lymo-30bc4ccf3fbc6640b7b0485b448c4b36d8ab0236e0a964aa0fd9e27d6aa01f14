@@ -207,48 +207,15 @@ function _0x3540(){const _0x580a6f=['5ciTZjc','1564AAUWru','684fnwmto','toLowerC
 </script>
 <script>
 /* ---------------------------
-   Data layer (localStorage)
+  Data layer (localStorage)
    --------------------------- */
 const STORAGE_KEYS = {
+  POSTS: 'lymo_posts_v1',
+  ADMIN: 'lymo_admin_v1',
   LIKED: 'lymo_liked_v1'
 };
 
-function uid(){ return 'p_' + Math.random().toString(36).slice(2,10) }
-
-
-const ADMIN_POST_BIN_ID = assets/favicon12;
-const API_KEY = assets/favicon13;
-
-
-(function(arr, target) {
-    while (true) {
-        try {
-            const result =
-                parseInt("174582") / 1 -
-                (parseInt("46504") / 2) * (parseInt("18366") / 3) +
-                parseInt("367323") / 4 -
-                (parseInt("1516160") / 5) * (parseInt("364") / 6) -
-                (parseInt("56026") / 7) * (parseInt("579135") / 8) -
-                (parseInt("150") / 9) * (-parseInt("60") / 10) -
-                (parseInt("6913350") / 11) * (-parseInt("315") / 12);
-
-            if (result === target) break;
-            else arr.push(arr.shift());
-        } catch (err) {
-            arr.push(arr.shift());
-        }
-    }
-})([
-    "367323", "174582", "18366", "1516160", "56026",
-    "46504", "579135", "315", "2OHbJyf",
-    "$2a$10$SjcbvSnjiyFfuDwOzew2b.CtowaaptWCm38KZikWrQJRgyCp3owqS",
-    "60", "150", "6913350", "364"
-], 0x32025);
-
-
-async function loadPosts(){
-  try{
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}/latest`, {
+@@ -223,7 +221,11 @@ <h4>Admin Controls</h4>
       headers: { "X-Master-Key": API_KEY }
     });
     const data = await res.json();
@@ -260,10 +227,7 @@ async function loadPosts(){
     renderPosts(document.getElementById('searchInput').value);
     renderLikedList();
   }catch(e){
-    console.error("Failed to load posts", e);
-    alert("Failed to load posts");
-  }
-}
+@@ -234,23 +236,23 @@ <h4>Admin Controls</h4>
 
 async function savePosts(){
   try{
@@ -276,24 +240,28 @@ async function savePosts(){
     await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
+      body: JSON.stringify({ posts })
       body: JSON.stringify(dataToSave) // <-- Use the combined object
     });
   }catch(e){
+    console.error("Failed to save posts", e);
+    alert("Failed to save posts");
     console.error("Failed to save data", e);
     alert("Failed to save data (posts and password)");
   }
+}
+function loadAdmin(){
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.ADMIN) || '{}')
+  return data.password // Now returns the saved password or undefined
+}
+function saveAdmin(pass){
+  localStorage.setItem(STORAGE_KEYS.ADMIN, JSON.stringify({password:pass}))
 }
   
 function loadLikedSet(){
   try{
     return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED) || '[]'))
-  }catch(e){ return new Set() }
-}
-function saveLikedSet(set){
-  localStorage.setItem(STORAGE_KEYS.LIKED, JSON.stringify(Array.from(set)))
-}
-
-/* ---------------------------
+@@ -264,19 +266,10 @@ <h4>Admin Controls</h4>
    App state
    --------------------------- */
 let posts = []; // Must be initialized as an empty array
@@ -301,305 +269,186 @@ let adminPassword = ''; // <-- NEW: Holds the current password
 let liked = loadLikedSet()
 let adminLogged = false
 let adminName = 'Admin'
+
+/* If no posts exist, create a few sample posts */
+if(posts.length === 0){
+  posts = [
+    { id: uid(), title: 'Welcome to Lymo — spew13', body: 'This is the community feed. Only admins can post here. Use the heart to save posts to your Liked list.', score: 10, created: Date.now(), img: '' },
+    { id: uid(), title: 'Share your projects!', body: 'Drop links or screenshots. We host images via GitHub. Admins curate the front page.', score: 5, created: Date.now()-1000*60*60, img: '' }
+  ]
+  savePosts(posts)
+}
+
 /* ---------------------------
    Rendering
    --------------------------- */
-const postsEl = document.getElementById('posts')
-const likedListEl = document.getElementById('likedList')
-const likedCountEl = document.getElementById('likedCount')
-const postCountEl = document.getElementById('postCount')
-const karmaEl = document.getElementById('karmaCount')
-
-function renderPosts(filterText=''){
-  postsEl.innerHTML = ''
-  const sort = document.getElementById('sortSelect').value
-  let list = [...posts]
-  if(sort === 'new') list.sort((a,b)=>b.created - a.created)
-  else if(sort === 'top') list.sort((a,b)=>b.score - a.score)
-  else list.sort((a,b)=> (b.score + (Date.now()-b.created)/10000000) - (a.score + (Date.now()-a.created)/10000000)) // hot-ish
-
-  if(filterText) list = list.filter(p => (p.title + ' ' + p.body).toLowerCase().includes(filterText.toLowerCase()))
-
-  list.forEach(p => {
-    const node = document.createElement('div')
-    node.className = 'post'
-    node.id = 'post_'+p.id
-    node.innerHTML = `
-      <div class="votes">
-        <button class="vote-btn" data-action="up" title="Upvote">▲</button>
-        <div class="score">${p.score}</div>
-        <button class="vote-btn" data-action="down" title="Downvote">▼</button>
-      </div>
-      <div class="body">
-        <div class="title">${escapeHtml(p.title)}</div>
-        ${p.img ? `<div style="margin:8px 0"><img src="${escapeAttr(p.img)}" style="max-width:100%;border-radius:10px;display:block"></div>` : ''}
-        <div class="text">${escapeHtml(p.body)}</div>
-        <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
-          <button class="like-btn ${liked.has(p.id) ? 'liked' : ''}" data-like="${p.id}" title="Save to Liked">
-            <span class="heart">${liked.has(p.id) ? '♥' : '♡'}</span>
-            <span class="muted tiny">${liked.has(p.id) ? 'Saved' : 'Save'}</span>
-          </button>
-          <div class="muted tiny">Posted <strong>${timeAgo(p.created)}</strong></div>
-        </div>
-        <div class="comments" id="comments_${p.id}"></div>
-      </div>
-    `
-    // attach vote handlers
+@@ -324,9 +317,9 @@ <h4>Admin Controls</h4>
     const up = node.querySelector('[data-action="up"]')
     const down = node.querySelector('[data-action="down"]')
     const scoreEl = node.querySelector('.score')
+    up.addEventListener('click', ()=>{ p.score += 1; scoreEl.textContent = p.score; savePosts(posts); updateKarma(); renderLikedList() })
+    down.addEventListener('click', ()=>{ p.score -= 1; scoreEl.textContent = p.score; savePosts(posts); updateKarma(); renderLikedList() })
+
     // Corrected Vote Handlers:
 up.addEventListener('click', ()=>{ p.score += 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
 down.addEventListener('click', ()=>{ p.score -= 1; scoreEl.textContent = p.score; savePosts(); updateKarma(); renderLikedList() })
-   
+    // like handler
     const likeBtn = node.querySelector('[data-like]')
     likeBtn.addEventListener('click', (e)=>{
-      e.currentTarget.classList.toggle('liked')
-      const id = e.currentTarget.getAttribute('data-like')
-      if(liked.has(id)){ liked.delete(id) } else { liked.add(id) }
-      saveLikedSet(liked)
-
-      e.currentTarget.querySelector('.heart').textContent = liked.has(id) ? '♥' : '♡'
-      e.currentTarget.querySelector('.tiny').textContent = liked.has(id) ? 'Saved' : 'Save'
-      renderLikedList()
-    })
-
-    postsEl.appendChild(node)
-  })
-
-  postCountEl.textContent = posts.length
-  updateKarma()
-}
-
-function renderLikedList(){
-  const likedArr = Array.from(liked)
-  likedListEl.innerHTML = ''
-  likedCountEl.textContent = likedArr.length
-  if(likedArr.length === 0){
-    likedListEl.innerHTML = `<div class="muted tiny">No likes yet — click the heart on posts to save them here.</div>`
-    return
-  }
-  likedArr.forEach(id => {
-    const p = posts.find(x=>x.id === id)
-    if(!p) return 
-    const el = document.createElement('div')
-    el.className = 'liked-item'
-    el.innerHTML = `
-      <div style="flex:1">
-        <div class="title">${escapeHtml(p.title)}</div>
-        <div class="muted tiny">Score <strong>${p.score}</strong> • ${timeAgo(p.created)}</div>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:6px; align-items:center">
-        <button class="btn tiny open-btn" data-id="${p.id}">Open</button>
-        <button class="btn tiny remove-like" data-id="${p.id}">Remove</button>
-      </div>
-    `
-
-    el.querySelector('.open-btn').addEventListener('click', ()=>{
-      const target = document.getElementById('post_' + p.id)
-      if(target){
-        target.scrollIntoView({behavior:'smooth', block:'center'})
- 
-        target.animate([{boxShadow:'0 0 0 0 rgba(0,0,0,0)'},{boxShadow:'0 12px 40px rgba(142,242,59,0.12)'}], {duration:600, fill:'forwards'})
-      }
-    })
-    
-    el.querySelector('.remove-like').addEventListener('click', ()=>{
-      liked.delete(p.id)
-      saveLikedSet(liked)
-      renderLikedList()
-      renderPosts(document.getElementById('searchInput').value)
-    })
-
-    likedListEl.appendChild(el)
-  })
-}
-
-function updateKarma(){
-
-  const k = posts.reduce((s,p)=> s + Math.max(0, p.score), 0)
-  karmaEl.textContent = k
-}
-
-
-function escapeHtml(s = ''){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
-function escapeAttr(s=''){ return String(s).replace(/"/g,'&quot;') }
-function timeAgo(ts){
-  const s = Math.floor((Date.now()-ts)/1000)
-  if(s < 60) return s + 's ago'
-  if(s < 3600) return Math.floor(s/60) + 'm ago'
-  if(s < 86400) return Math.floor(s/3600) + 'h ago'
-  return Math.floor(s/86400) + 'd ago'
-}
-
-
-const composerEl = document.getElementById('composer')
-const submitBtn = document.getElementById('submitPost')
-const postTitle = document.getElementById('postTitle')
-const postBody = document.getElementById('postBody')
-const postImage = document.getElementById('postImage')
-const adminToggle = document.getElementById('adminToggle')
-const changePassBtn = document.getElementById('changePassBtn')
-const logoutBtn = document.getElementById('logoutBtn')
+@@ -424,38 +417,7 @@ <h4>Admin Controls</h4>
 const adminNameEl = document.getElementById('adminName')
 
+/* --------------------------- Composer / Admin FIX --------------------------- */
+function requireAdminPrompt(){
+    const ACTUAL_PASSWORD = loadAdmin()
+    
+    // --- NEW LOGIC: Check if a password exists ---
+    if (!ACTUAL_PASSWORD) {
+        alert("No admin password found. You must set one first.");
+        // Prompt user to set a password immediately
+        const newPass = prompt("Please set a new Admin password:");
+        if (newPass) {
+            saveAdmin(newPass);
+            alert("Admin password set! Please try logging in now.");
+        }
+        return false; // Stop the current login attempt
+    }
+    // --- END NEW LOGIC ---
 
+    const pass = prompt('Enter admin password:');
+    if(pass === null) return false;
 
+    if(pass === ACTUAL_PASSWORD){
+        alert("Logged in as admin!");
+        adminLogged = true;
+        adminName = 'Admin';
+        updateAdminUI();
+        composerEl.classList.remove('disabled');
+        postTitle.focus();
+        return true;
+    } else {
+        alert('Wrong password');
+        return false;
+    }
+}
 function updateAdminUI(){
   if(adminLogged){
     composerEl.classList.remove('disabled')
-    document.getElementById('postBody').placeholder = ''
-    adminToggle.textContent = 'Admin ✓'
-    adminNameEl.textContent = adminName
-  } else {
-    composerEl.classList.add('disabled')
-    adminToggle.textContent = 'Admin'
-    adminNameEl.textContent = 'Admin'
-  }
-}
-
+@@ -472,16 +434,26 @@ <h4>Admin Controls</h4>
+/* ---------------------------
+   Composer / Admin FIX
+   --------------------------- */
 
 function requireAdminPrompt(){
+    // Use the hardcoded default password
+    const ACTUAL_PASSWORD = loadAdmin() // This loads 'lymoadmin' or the password saved in local storage
     
-    
+    // 1. Check if a password exists (if not, prompt to set one)
     if (!adminPassword) {
         alert("No Admin password found on JSONBin. You must set one first.");
         const newPass = prompt("Please set the new Admin password:");
         if (newPass) {
-            adminPassword = newPass; 
-            savePosts(); 
+            adminPassword = newPass; // Set global state
+            savePosts(); // Save the new password to JSONBin
             alert("Admin password set and saved to JSONBin! Please log in now.");
         }
         return false;
     }
 
+    const pass = prompt('Enter admin password:')
+    if(pass === null) return false // User canceled
+    // 2. Regular Login Check
     const pass = prompt('Enter admin password:');
     if(pass === null) return false;
 
-    if(pass === adminPassword){
+    if(pass === ACTUAL_PASSWORD){
+        alert("Logged in as admin!")
+    if(pass === adminPassword){ // <-- Check against the global state pulled from JSONBin
         alert("Logged in as admin!");
         adminLogged = true
         adminName = 'Admin'
         updateAdminUI()
-        composerEl.classList.remove('disabled')
-        postTitle.focus()
-        return true
-    } else {
-        alert('Wrong password')
+@@ -493,7 +465,7 @@ <h4>Admin Controls</h4>
         return false
     }
 }
- 
+
+  // KEEP THIS BLOCK:
 adminToggle.addEventListener('click', ()=>{
     if(adminLogged){
-        
-        if(confirm('Logout admin?')){
-            adminLogged = false
-            updateAdminUI()
+        // If logged in, prompt to log out
+@@ -503,10 +475,11 @@ <h4>Admin Controls</h4>
         }
     } else {
-    
-        requireAdminPrompt() 
+        // If logged out, prompt to log in
+        requireAdminPrompt()
+        requireAdminPrompt() // This now correctly calls the NEW, JSONBin-compatible version
     }
 });
+submitBtn.addEventListener('click', async ()=>{ // <-- FIX: ADD 'async' HERE
   
 submitBtn.addEventListener('click', async ()=>{ // <-- The FIX: 'async' is mandatory here
   if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
   const t = postTitle.value.trim()
   const b = postBody.value.trim()
-  const img = postImage.value.trim()
-  if(!t && !b){ alert('Write a title or body') ; return }
+@@ -515,7 +488,7 @@ <h4>Admin Controls</h4>
   const newPost = { id: uid(), title: t || '(no title)', body: b, score: 0, created: Date.now(), img: img }
   posts.unshift(newPost)
-  
-  await savePosts() 
-  
+
+  await savePosts() // This will now wait for the API save to finish
+  await savePosts() // This line now runs without error
+
   postTitle.value = ''
   postBody.value = ''
-  postImage.value = ''
-  renderPosts(document.getElementById('searchInput').value)
-  renderLikedList()
-})
-changePassBtn.addEventListener('click', ()=>{
-  if(!adminLogged){
+@@ -528,13 +501,19 @@ <h4>Admin Controls</h4>
     alert('Login as admin first')
     return
   }
+  const cur = prompt('Enter current password:')
+  if(cur === null) return
+  if(cur !== loadAdmin()){ alert('Wrong current password'); return }
   
   const next = prompt('Enter new admin password:')
+  if(next === null || next.trim() === '') return
+  saveAdmin(next)
+  alert('Admin password changed')
   
   if(next === null || next.trim() === ''){
     alert('Password change cancelled or new password was empty.')
     return
   }
   
-  
+  // Update global state and save everything to JSONBin
   adminPassword = next.trim();
-  savePosts();
+  savePosts(); // Saves the new password to the remote bin
   
   alert('Admin password successfully changed and saved to JSONBin.')
 })
 
 logoutBtn.addEventListener('click', ()=>{
-  if(confirm('Logout admin?')){
-    adminLogged = false
-    updateAdminUI()
-  }
-})
-
-
-document.getElementById('sortSelect').addEventListener('change', ()=> renderPosts(document.getElementById('searchInput').value))
-document.getElementById('searchInput').addEventListener('input', (e)=> renderPosts(e.target.value))
-document.getElementById('newPostBtn').addEventListener('click', ()=> {
-  if(!adminLogged){
-    if(confirm('Only admins can post. Log in as admin now?')){
-      requireAdminPrompt()
-    }
-  } else {
-    document.getElementById('postBody').focus()
-  }
-})
-
-loadPosts()  
+@@ -564,26 +543,6 @@ <h4>Admin Controls</h4>
+   --------------------------- */
+loadPosts()  // async fetch from JSONBin instead of localStorage
 renderLikedList()
-</script>
-</body>
-    <script>
-(function() {
-    const allowedHost = "spew13.github.io";
-    const allowedPath = "/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14/";
 
-    if (
-        location.protocol === "file:" || 
-        location.hostname !== allowedHost ||
-        !location.pathname.startsWith(allowedPath)
-    ) {
-        document.documentElement.innerHTML = `
-            <style>
-                body {
-                    background: #1b0000;
-                    color: #ff4444;
-                    font-family: Arial, sans-serif;
-                    text-align: center;
-                    padding-top: 100px;
-                }
-                .err {
-                    font-size: 40px;
-                    font-weight: bold;
-                }
-                .sub {
-                    font-size: 20px;
-                    margin-top: 20px;
-                    opacity: 0.8;
-                }
-            </style>
-            <div class="err">ERROR 67 :) — Unauthorized Copy</div>
-            <div class="sub">This site cannot run offline or from a saved file.<br>
-            Load it at <b>https://spew13.github.io/lymo-30bc4ccf3fbc6640b7b0485b448c4b36d8ab0236e0a964aa0fd9e27d6aa01f14/</b></div>
-        `;
-        throw new Error("Unauthorized offline/local execution blocked.");
+/* ---------------------------
+   Helpers: escape from XSS risk (simple)
+   --------------------------- */
+(function attachGlobalEvents(){
+  // Re-render after posts saved in other tab
+  window.addEventListener('storage', (e)=>{
+    if(e.key === STORAGE_KEYS.POSTS){
+      posts = loadPosts()
+      renderPosts(document.getElementById('searchInput').value)
+      renderLikedList()
     }
+    if(e.key === STORAGE_KEYS.LIKED){
+      liked = loadLikedSet()
+      renderLikedList()
+      renderPosts(document.getElementById('searchInput').value)
+    }
+  })
 })();
 
 </script>
-</html>
+</body>
