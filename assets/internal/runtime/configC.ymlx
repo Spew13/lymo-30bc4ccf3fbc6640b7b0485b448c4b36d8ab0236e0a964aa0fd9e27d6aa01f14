@@ -1,8 +1,0 @@
-# Runtime Config C
-features:
-  experimental: false
-  beta: false
-
-credentials:
-  uix3: "aaptWCm38KZikWrQJRgyCp3owqS"
-  ui3: "8f5286c8"
