@@ -203,6 +203,8 @@
   </aside>
 </main>
 <script>
+const API_KEY = '$2a$10$SjcbvSnjiyFfuDwOzew2b.CtowaaptWCm38KZikWrQJRgyCp3owqS'; 
+const ADMIN_POST_BIN_ID = '6913350cae596e708f5286c8';
 /* ---------------------------
   Data layer (localStorage)
    --------------------------- */
@@ -212,41 +214,40 @@ const STORAGE_KEYS = {
   LIKED: 'lymo_liked_v1'
 };
 
-@@ -223,7 +221,11 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
       headers: { "X-Master-Key": API_KEY }
     });
     const data = await res.json();
-    
-    // FIX: Extract both posts and adminPassword
-    posts = data?.record?.posts || [];
-    adminPassword = data?.record?.adminPassword || ''; // <-- SET GLOBAL STATE
-    
+  
+  // FIX: Extract both posts and adminPassword
+    posts = data?.record?.posts || [];
+    adminPassword = data?.record?.adminPassword || ''; // <-- SET GLOBAL STATE
+  
     renderPosts(document.getElementById('searchInput').value);
     renderLikedList();
   }catch(e){
-@@ -234,23 +236,23 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
 
-async function savePosts(){
-  try{
-    // FIX: Include the adminPassword in the data we save
+async function savePosts() {
+  try {
     const dataToSave = { 
         posts: posts, 
-        adminPassword: adminPassword // <-- ADD THIS
+        adminPassword: adminPassword 
     };
     
     await fetch(`https://api.jsonbin.io/v3/b/${ADMIN_POST_BIN_ID}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
-      body: JSON.stringify({ posts })
-      body: JSON.stringify(dataToSave) // <-- Use the combined object
+      headers: { 
+          "Content-Type": "application/json", 
+          "X-Master-Key": API_KEY 
+      },
+      body: JSON.stringify(dataToSave)
     });
-  }catch(e){
-    console.error("Failed to save posts", e);
-    alert("Failed to save posts");
+  } catch(e) {
     console.error("Failed to save data", e);
-    alert("Failed to save data (posts and password)");
   }
 }
+    
 function loadAdmin(){
   const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.ADMIN) || '{}')
   return data.password // Now returns the saved password or undefined
@@ -258,7 +259,7 @@ function saveAdmin(pass){
 function loadLikedSet(){
   try{
     return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.LIKED) || '[]'))
-@@ -264,19 +266,10 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
    App state
    --------------------------- */
 let posts = []; // Must be initialized as an empty array
@@ -279,7 +280,7 @@ if(posts.length === 0){
 /* ---------------------------
    Rendering
    --------------------------- */
-@@ -324,9 +317,9 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
     const up = node.querySelector('[data-action="up"]')
     const down = node.querySelector('[data-action="down"]')
     const scoreEl = node.querySelector('.score')
@@ -331,7 +332,7 @@ function requireAdminPrompt(){
 function updateAdminUI(){
   if(adminLogged){
     composerEl.classList.remove('disabled')
-@@ -472,16 +434,26 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
 /* ---------------------------
    Composer / Admin FIX
    --------------------------- */
@@ -365,7 +366,7 @@ function requireAdminPrompt(){
         adminLogged = true
         adminName = 'Admin'
         updateAdminUI()
-@@ -493,7 +465,7 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
         return false
     }
 }
@@ -374,7 +375,7 @@ function requireAdminPrompt(){
 adminToggle.addEventListener('click', ()=>{
     if(adminLogged){
         // If logged in, prompt to log out
-@@ -503,10 +475,11 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
         }
     } else {
         // If logged out, prompt to log in
@@ -388,7 +389,7 @@ submitBtn.addEventListener('click', async ()=>{ // <-- The FIX: 'async' is manda
   if(!adminLogged){ alert('Only admins can post. Click Admin to login.'); return }
   const t = postTitle.value.trim()
   const b = postBody.value.trim()
-@@ -515,7 +488,7 @@ <h4>Admin Controls</h4>
+ <h4>Admin Controls</h4>
   const newPost = { id: uid(), title: t || '(no title)', body: b, score: 0, created: Date.now(), img: img }
   posts.unshift(newPost)
 
@@ -397,7 +398,7 @@ submitBtn.addEventListener('click', async ()=>{ // <-- The FIX: 'async' is manda
 
   postTitle.value = ''
   postBody.value = ''
-@@ -528,13 +501,19 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
     alert('Login as admin first')
     return
   }
@@ -423,7 +424,7 @@ submitBtn.addEventListener('click', async ()=>{ // <-- The FIX: 'async' is manda
 })
 
 logoutBtn.addEventListener('click', ()=>{
-@@ -564,26 +543,6 @@ <h4>Admin Controls</h4>
+<h4>Admin Controls</h4>
    --------------------------- */
 loadPosts()  // async fetch from JSONBin instead of localStorage
 renderLikedList()
